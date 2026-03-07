@@ -18,12 +18,13 @@ Katalog & Kelola Kendaraan (CRUD)
 Manajemen Pesanan & Dashboard Admin
 
  ERD database menggunakan mermaid
-## ERD Database
+## ERD Database Sistem Penyewaan Kendaraan
 
 ```mermaid
+erDiagram
 
 USERS {
-    INT id PK
+    INT id
     VARCHAR full_name
     VARCHAR email
     VARCHAR password_hash
@@ -32,7 +33,7 @@ USERS {
 }
 
 VEHICLES {
-    INT id PK
+    INT id
     VARCHAR brand
     VARCHAR model
     VARCHAR license_plate
@@ -45,9 +46,9 @@ VEHICLES {
 }
 
 BOOKINGS {
-    INT id PK
-    INT user_id FK
-    INT vehicle_id FK
+    INT id
+    INT user_id
+    INT vehicle_id
     DATE start_date
     DATE end_date
     INT total_days
@@ -57,14 +58,15 @@ BOOKINGS {
 }
 
 PAYMENTS {
-    INT id PK
-    INT booking_id FK
+    INT id
+    INT booking_id
     VARCHAR payment_method
     DECIMAL amount
     TIMESTAMP payment_date
     ENUM payment_status
 }
 
-USERS ||--o{ BOOKINGS : "melakukan"
-VEHICLES ||--o{ BOOKINGS : "disewa dalam"
-BOOKINGS ||--o{ PAYMENTS : "memiliki"
+USERS ||--o{ BOOKINGS : "makes"
+VEHICLES ||--o{ BOOKINGS : "rented_in"
+BOOKINGS ||--o{ PAYMENTS : "has"
+```
