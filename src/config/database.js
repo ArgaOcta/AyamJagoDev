@@ -12,14 +12,22 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Mengubah pool menjadi format promise agar mudah digunakan dengan async/await
 const db = pool.promise();
 
-// Test koneksi
 db.getConnection()
-    .then((connection) => {
+    .then(async (connection) => {
         console.log('Koneksi ke database MySQL berhasil!');
-        connection.release();
+        
+        try {
+            // TEST QUERY: Melihat daftar tabel di dalam database rental_kendaraan
+            const [rows] = await connection.query('SHOW TABLES');
+            console.log('Test Query Berhasil! Berikut daftar tabel di database kamu:');
+            console.log(rows);
+        } catch (queryError) {
+            console.error('Test Query Gagal:', queryError.message);
+        }
+
+        connection.release(); // Lepaskan koneksi setelah test selesai
     })
     .catch((err) => {
         console.error('Gagal terhubung ke database:', err.message);

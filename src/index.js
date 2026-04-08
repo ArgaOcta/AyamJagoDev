@@ -7,7 +7,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-// Endpoint sederhana sesuai target Sprint
+const bookingRoutes = require('./routes/bookingRoutes');
+app.use('/api/bookings', bookingRoutes);
+
 app.get('/', (req, res) => {
     res.json({
         message: "Backend Aplikasi Rental Kendaraan Berhasil Dijalankan!",
