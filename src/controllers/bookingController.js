@@ -10,7 +10,7 @@ const processBooking = async (req, res) => {
         }
         const pricePerDay = vehicle[0].price_per_day;
         
-        const start = new Date(start_date);
+        const start = new Date(start_date);1
         const end = new Date(end_date);
         const totalDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) || 1; 
 
