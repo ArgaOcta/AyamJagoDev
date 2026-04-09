@@ -1,7 +1,7 @@
 {
   "name": "ayamjagodev",
   "version": "1.0.0",
-  "description": "Kelompok AyamJago.dev\r kami adalah kelompok pembuatan project web pada mata kuliah pemograman fullstuck dimana misi kami menyelesaikan project yang telah kami rancang.",
+  "description": "Kelompok AyamJago.dev kami adalah kelompok pembuatan project web pada mata kuliah pemrograman fullstack dimana misi kami menyelesaikan project yang telah kami rancang.",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ArgaOcta/AyamJagoDev.git"
+    "url": "https://github.com/ArgaOcta/AyamJagoDev.git"
   },
   "keywords": [],
   "author": "",
