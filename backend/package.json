@@ -1,0 +1,32 @@
+{
+  "name": "ayamjagodev",
+  "version": "1.0.0",
+  "description": "Kelompok AyamJago.dev kami adalah kelompok pembuatan project web pada mata kuliah pemrograman fullstack dimana misi kami menyelesaikan project yang telah kami rancang.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ArgaOcta/AyamJagoDev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ArgaOcta/AyamJagoDev/issues"
+  },
+  "homepage": "https://github.com/ArgaOcta/AyamJagoDev#readme",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
