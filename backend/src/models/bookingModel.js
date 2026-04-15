@@ -20,7 +20,8 @@ const createPaymentQuery = async (bookingId, paymentMethod, amount) => {
 };
 
 const getVehiclePriceQuery = async (vehicleId) => {
-    const query = `SELECT price_per_day FROM vehicles WHERE id = ?`;
+    // BUG FIX: Tambahkan pengambilan 'status' dari database
+    const query = `SELECT price_per_day, status FROM vehicles WHERE id = ?`;
     const [rows] = await db.query(query, [vehicleId]);
     return rows;
 };
