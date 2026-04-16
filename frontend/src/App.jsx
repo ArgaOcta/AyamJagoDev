@@ -3,6 +3,7 @@ import CatalogPage from './pages/CatalogPage';
 import BookingPage from './pages/BookingPage';
 import ProfilePage from './pages/ProfilePage'; 
 import HistoryPage from './pages/HistoryPage';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
