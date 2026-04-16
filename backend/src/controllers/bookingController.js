@@ -2,6 +2,7 @@ const bookingModel = require('../models/bookingModel');
 
 const processBooking = async (req, res) => {
     const { user_id, vehicle_id, start_date, end_date, payment_method } = req.body;
+
     //VALIDASI PAYMENT METHOD
     const validMethods = ['cash', 'transfer', 'qris'];
 
