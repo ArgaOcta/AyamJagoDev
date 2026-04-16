@@ -1,22 +1,21 @@
 const express = require('express');
-const cors = require('cors'); // 1. Import CORS
+const cors = require('cors');
 require('dotenv').config();
 require('./config/database');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 2. Gunakan CORS agar React (port 5173) diizinkan mengambil data
 app.use(cors()); 
 app.use(express.json());
 
-// 3. Import Routes
 const bookingRoutes = require('./routes/bookingRoutes');
-const vehicleRoutes = require('./routes/vehicleRoutes'); // Pastikan ini ada
+const vehicleRoutes = require('./routes/vehicleRoutes');
+const userRoutes = require('./routes/userRoutes');
 
-// 4. Gunakan Routes
 app.use('/api/bookings', bookingRoutes);
-app.use('/api/vehicles', vehicleRoutes); // Daftarkan API kendaraan
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
     res.json({

@@ -22,6 +22,8 @@ function ProfilePage() {
 
     if (loading) return <p>Memuat profil...</p>;
 
+    if (!userData) return <p>Gagal memuat data profil. Pastikan backend berjalan dan API tersedia.</p>;
+
     return (
         <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
             <button onClick={() => navigate('/')} style={{ marginBottom: '20px' }}>← Kembali ke Katalog</button>
