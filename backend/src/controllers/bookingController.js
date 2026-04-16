@@ -3,6 +3,22 @@ const bookingModel = require('../models/bookingModel');
 const processBooking = async (req, res) => {
     const { user_id, vehicle_id, start_date, end_date, payment_method } = req.body;
 
+    //VALIDASI PAYMENT METHOD
+    const validMethods = ['cash', 'transfer', 'qris'];
+
+    if (!payment_method) {
+        return res.status(400).json({
+            success: false,
+            message: "Metode pembayaran wajib diisi!"
+        });
+    }
+
+    if (!validMethods.includes(payment_method)) {
+        return res.status(400).json({
+            success: false,
+            message: "Metode pembayaran tidak valid"
+        });
+    }
     // ==========================================
     // 1. VALIDASI INPUT (Tugas Sprint 5)
     // ==========================================
