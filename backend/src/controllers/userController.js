@@ -1,7 +1,11 @@
 const db = require('../config/database');
 
 const getUserProfile = async (req, res) => {
-    const userId = req.params.id;
+//  keamanan tambahan jika authMiddleware gagal menjalankan ilangin aja "//" agar logic jalan! kalau bisa gk usahh
+    //if (!req.user) {
+      //  return res.status(401).json({ message: "Unauthorized" });      
+    //}
+    const userId = req.user.id; // user gak bisa akses data orang lain
     try {
         // Mengambil data user berdasarkan ID
         const [user] = await db.query('SELECT id, full_name, email, role, created_at FROM users WHERE id = ?', [userId]);
