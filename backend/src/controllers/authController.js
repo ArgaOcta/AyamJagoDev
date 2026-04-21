@@ -1,5 +1,5 @@
 const db = require('../config/database');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res) => {
@@ -17,7 +17,7 @@ const login = async (req, res) => {
 
         const user = rows[0];
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password_hash);
         if (!isMatch) {
             return res.status(401).json({ message: 'Password salah' });
         }
@@ -42,10 +42,8 @@ const register = async (req, res) => {
     const { full_name, email, password } = req.body;
 
     try {
-        // hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // insert ke DB
         await db.query(
             'INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, ?)',
             [full_name, email, hashedPassword, 'user']
@@ -58,4 +56,4 @@ const register = async (req, res) => {
     }
 };
 
-module.exports = { login };
+module.exports = { login, register };

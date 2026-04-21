@@ -1,7 +1,6 @@
-const db = require('../config/db'); // Sesuaikan dengan konfigurasi database kelompok Anda
+const db = require('../config/database');
 
 const getUserHistory = async (req, res) => {
-    // user_id biasanya didapat dari middleware auth (tugas Anwar Maulana)
     const userId = req.user.id; 
 
     const query = `
