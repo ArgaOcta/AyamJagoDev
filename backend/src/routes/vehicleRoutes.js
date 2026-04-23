@@ -4,7 +4,8 @@ const vehicleController = require('../controllers/vehicleController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const authorize = require('../middlewares/authorize');
 
-// semua user boleh lihat kendaraan
-router.get('/', authMiddleware, authorize(['admin', 'user']), vehicleController.getAllVehicles);
+router.get('/', vehicleController.getAllVehicles);
+
+router.get('/:id', vehicleController.getVehicleById);
 
 module.exports = router;
