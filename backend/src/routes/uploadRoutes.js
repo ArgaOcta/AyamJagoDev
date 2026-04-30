@@ -1,64 +1,43 @@
 const express = require("express");
 const router = express.Router();
 
-// middleware upload file (multer biasanya)
 const upload = require("../middlewares/uploadMiddleware");
 
-// koneksi database
-const db = require("../config/db");
+const db = require("../config/database");
 
-// route POST upload gambar
 router.post("/", (req, res) => {
+  upload.single("photo")(req, res, async (err) => { 
 
-  // upload 1 file dengan field name = photo
-  upload.single("photo")(req, res, (err) => {
-
-    // kalau error upload
     if (err) {
-      return res.status(400).json({
-        message: err.message,
-      });
+      return res.status(400).json({ message: err.message });
     }
 
-    // kalau file kosong / tidak dikirim
     if (!req.file) {
-      return res.status(400).json({
-        message: "Tidak ada file diupload",
-      });
+      return res.status(400).json({ message: "Tidak ada file diupload" });
     }
 
-    // ambil vehicle_id dari body
     const vehicleId = req.body.vehicle_id;
-
-    // validasi vehicle_id wajib ada
     if (!vehicleId) {
-      return res.status(400).json({
-        message: "vehicle_id wajib diisi",
-      });
+      return res.status(400).json({ message: "vehicle_id wajib diisi" });
     }
 
-    // query update nama file ke tabel vehicles
-    const sql = "UPDATE vehicles SET image_url = ? WHERE id = ?";
+    try {
+      const sql = "UPDATE vehicles SET image_url = ? WHERE id = ?";
+      await db.query(sql, [req.file.filename, vehicleId]); 
 
-    db.query(sql, [req.file.filename, vehicleId], (dbErr, result) => {
-
-      // kalau query gagal
-      if (dbErr) {
-        return res.status(500).json({
-          message: "Gagal update database",
-          error: dbErr.message,
-        });
-      }
-
-      // response sukses
       res.json({
         message: "Upload berhasil & gambar kendaraan diupdate",
         filename: req.file.filename,
         url: `/uploads/${req.file.filename}`,
       });
-    });
+    } catch (dbErr) {
+      console.error(dbErr);
+      res.status(500).json({
+        message: "Gagal update database",
+        error: dbErr.message,
+      });
+    }
   });
 });
 
-// export router
 module.exports = router;
