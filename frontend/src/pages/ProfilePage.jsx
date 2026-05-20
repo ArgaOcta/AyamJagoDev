@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function ProfilePage() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const userId = 1; // Sementara hardcoded sesuai user_id di BookingPage kamu
+    const userId = 1;
     const navigate = useNavigate();
 
     useEffect(() => {

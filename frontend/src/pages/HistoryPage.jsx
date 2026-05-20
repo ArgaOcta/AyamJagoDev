@@ -7,8 +7,6 @@ const HistoryPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Menggunakan endpoint yang sesuai dengan tanggung jawab fitur Anda
-        // Tambahkan token agar backend tahu siapa user yang sedang mengakses
         const response = await fetch('http://localhost:5000/api/history', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}` 
@@ -18,7 +16,7 @@ const HistoryPage = () => {
         if (!response.ok) throw new Error("Gagal mengambil data");
         
         const data = await response.json();
-        setHistory(Array.isArray(data) ? data : []); // Pastikan data berbentuk array
+        setHistory(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Gagal memuat riwayat:", error);
       } finally {
@@ -28,7 +26,6 @@ const HistoryPage = () => {
     fetchData();
   }, []);
 
-  // Fungsi untuk memberi warna pada status sesuai dokumentasi proyek 
   const getStatusStyle = (status) => {
     const styles = {
       completed: { bg: '#d4edda', color: '#155724' },
