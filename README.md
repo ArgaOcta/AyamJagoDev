@@ -1,3 +1,12 @@
+***Total Update History of the Last Commit Before the Error:***
+
+**1. Treesaken (MbilalFatiha)**: **12 Commits**  
+**2. Mrhankim**: **10 Commits**  
+**3. Warlana1451**: **7 Commits**  
+**4. ArgaOcta**: **4 Commits**
+**5. biligunawan**: **1 Commits**
+**https://docs.google.com/document/d/1vY4BK9iYWRwoRKpnncrqncC_xU8kfmj82xqHvfzVnjk/edit?usp=sharing**
+
 Kelompok AyamJago.dev
 kami adalah kelompok pembuatan project web pada mata kuliah pemograman fullstuck dimana misi kami menyelesaikan project yang telah kami rancang.
 
