@@ -8,40 +8,38 @@ function AdminDashboard() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-    const decodedToken = getDecodedToken();
-
-    const isAdmin = decodedToken?.role === 'admin';
-
-    const fetchData = async () => {
-        try {
-            const resVehicles = await axios.get(`${API_BASE_URL}/api/vehicles`);
-            const resBookings = await axios.get(`${API_BASE_URL}/api/admin/history`, {
-                headers: getAuthHeaders()
-            });
-
-            setVehicles(resVehicles.data.data);
-            setBookings(Array.isArray(resBookings.data) ? resBookings.data : []);
-
-            setLoading(false);
-        } catch (err) {
-            console.error("Gagal memuat data admin:", err);
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
+        // Cek autentikasi dan role admin
+        const decodedToken = getDecodedToken();
+        const isAdmin = decodedToken?.role === 'admin';
+
         if (!isAuthenticated() || !isAdmin) {
             clearToken();
             navigate('/login');
             return;
         }
 
-        const load = async () => {
-            await fetchData();
+        // Fungsi untuk mengambil data (hanya dijalankan jika user adalah admin)
+        const fetchData = async () => {
+            try {
+                const resVehicles = await axios.get(`${API_BASE_URL}/api/vehicles`);
+                const resBookings = await axios.get(`${API_BASE_URL}/api/admin/history`, {
+                    headers: getAuthHeaders()
+                });
+                
+                // Set state data
+                setVehicles(resVehicles.data.data || resVehicles.data || []);
+                setBookings(Array.isArray(resBookings.data) ? resBookings.data : []);
+                setLoading(false);
+            } catch (err) {
+                console.error("Gagal memuat data admin:", err);
+                setLoading(false);
+            }
         };
 
-        load();
-    }, [navigate, isAdmin]);
+        fetchData();
+    }, [navigate]);
 
     const handleDeleteVehicle = async (id) => {
         if(window.confirm("Hapus kendaraan ini?")) {
@@ -50,8 +48,12 @@ function AdminDashboard() {
                     headers: getAuthHeaders()
                 });
                 alert("Kendaraan dihapus!");
-                fetchData();
-            } catch (err) { console.error(err); alert("Gagal menghapus"); }
+                // Update tabel secara langsung tanpa perlu memuat ulang seluruh halaman
+                setVehicles(prevVehicles => prevVehicles.filter(v => v.id !== id));
+            } catch (err) { 
+                console.error(err); 
+                alert("Gagal menghapus kendaraan"); 
+            }
         }
     };
 
