@@ -1,15 +1,35 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+=======
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_BASE_URL, getAuthHeaders, isAuthenticated } from '../utils/api';
+>>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
 function BookingPage() {
     const { vehicleId } = useParams();
     const navigate = useNavigate();
 
+<<<<<<< HEAD
     const [formData, setFormData] = useState({
         start_date: '',
         end_date: '',
         payment_method: 'Transfer Bank'
+=======
+    useEffect(() => {
+        if (!isAuthenticated()) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
+    const [formData, setFormData] = useState({
+        start_date: '',
+        end_date: '',
+        payment_method: 'transfer'
+>>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
     });
     const [message, setMessage] = useState('');
 
@@ -22,6 +42,7 @@ function BookingPage() {
         setMessage('Memproses pesanan...');
 
         try {
+<<<<<<< HEAD
             const response = await axios.post('http://localhost:5000/api/bookings', {
                 user_id: 1,
                 vehicle_id: vehicleId,
@@ -29,6 +50,18 @@ function BookingPage() {
                 end_date: formData.end_date,
                 payment_method: formData.payment_method
             });
+=======
+            const response = await axios.post(
+                `${API_BASE_URL}/api/bookings`,
+                {
+                    vehicle_id: vehicleId,
+                    start_date: formData.start_date,
+                    end_date: formData.end_date,
+                    payment_method: formData.payment_method
+                },
+                { headers: getAuthHeaders() }
+            );
+>>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
             setMessage(response.data.message);
             setTimeout(() => {
@@ -63,9 +96,15 @@ function BookingPage() {
                 <div>
                     <label>Metode Pembayaran:</label><br />
                     <select name="payment_method" onChange={handleChange} style={{ width: '100%', padding: '8px' }}>
+<<<<<<< HEAD
                         <option value="Transfer Bank">Transfer Bank</option>
                         <option value="Cash on Delivery">Cash on Delivery (COD)</option>
                         <option value="E-Wallet">E-Wallet</option>
+=======
+                        <option value="transfer">Transfer Bank</option>
+                        <option value="cash">Cash on Delivery (COD)</option>
+                        <option value="qris">E-Wallet</option>
+>>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
                     </select>
                 </div>
                 

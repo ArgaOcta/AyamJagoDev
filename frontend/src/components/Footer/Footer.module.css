@@ -15,6 +15,7 @@
   font-size: 1.5rem;
   font-weight: 800;
   color: var(--white);
+  color: var(--color-primary-foreground);
   margin-bottom: 1rem;
   display: inline-block;
 }
@@ -28,6 +29,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--white);
+  color: var(--color-sidebar-foreground);
   margin-bottom: 1.5rem;
 }
 
@@ -46,6 +48,22 @@
 
 .footerBottom {
   border-top: 1px solid #374151;
+}
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footerLink {
+  color: var(--color-muted-foreground);
+}
+
+.footerLink:hover {
+  color: var(--color-primary-foreground);
+}
+
+.footerBottom {
+  border-top: 1px solid var(--color-sidebar-border);
   padding-top: 2rem;
   text-align: center;
   font-size: 0.875rem;

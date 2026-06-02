@@ -1,4 +1,11 @@
 {
+  "name": "ayamjagodev",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "backend": "npm --prefix backend run dev"
+  },
   "dependencies": {
     "multer": "^2.1.1",
     "uuid": "^14.0.0"

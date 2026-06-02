@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, Settings } from 'lucide-react';
 import styles from './VehicleCatalog.module.css';
 
@@ -46,6 +47,8 @@ const vehicles = [
 ];
 
 export function VehicleCatalog() {
+  const navigate = useNavigate();
+
   return (
     <section id="katalog" className={styles.catalogSection}>
       <div className="container">
@@ -85,6 +88,12 @@ export function VehicleCatalog() {
                 </div>
                 
                 <button className="btn btn-outline btn-block">Booking</button>
+                <button
+                  className="btn btn-outline btn-block"
+                  onClick={() => navigate(`/book/${vehicle.id}`)}
+                >
+                  Booking
+                </button>
               </div>
             </div>
           ))}
