@@ -1,85 +1,36 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import React from 'react';
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 
-import Navbar from './components/Navbar/Navbar'; 
-import Footer from './components/Footer/Footer'; 
-import Hero from './components/Hero/Hero';
-import BookingBar from './components/BookingBar/BookingBar';
+// --- IMPORTS KOMPONEN (Gunakan kurung kurawal jika menggunakan export function biasa) ---
+import { Navbar } from './components/Navbar/Navbar'; 
+import Footer from './components/Footer/Footer'; // Pastikan Footer menggunakan 'export default Footer'
 
+// --- IMPORTS PAGES ---
 import Home from './pages/Home';
-import Features from './components/Features/Features';
-import VehicleCatalog from './components/VehicleCatalog/VehicleCatalog';
-import Testimonials from './components/Testimonials/Testimonials';
+import Register from './pages/Register';
+import ProfilePage from './pages/ProfilePage';
+import CatalogPage from './pages/CatalogPage';
+import BookingPage from './pages/BookingPage';
+import HistoryPage from './pages/HistoryPage';
+import AdminDashboard from './pages/AdminDashboard';
 
+import { getDecodedToken, isAuthenticated } from './utils/api';
+
+// --- LAYOUTS ---
 const MainLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar /> 
-
-      <Hero />
-
-      <BookingBar />
-
-      <Features />
-
-      <VehicleCatalog />
-
-      <Testimonials />
+      
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
 
       <Footer /> 
     </div>
   );
 };
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />, 
-    children: [
-      { 
-        path: "/", 
-        element: <Home />
-      },
-    ]
-  }
-]);
-
-// 3. Render Aplikasi
-function App() {
-  return <RouterProvider router={router} />;
-}
-
-export default App;
-﻿import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom'
-
-import './App.css'
-
-// Components
-import Navbar from './components/Navbar/Navbar'
-import Footer from './components/Footer/Footer'
-
-// Pages
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import ProfilePage from './pages/ProfilePage'
-import CatalogPage from './pages/CatalogPage'
-import BookingPage from './pages/BookingPage'
-import HistoryPage from './pages/HistoryPage'
-import AdminDashboard from './pages/AdminDashboard'
-
-import { getDecodedToken, isAuthenticated } from './utils/api'
-
-// Layout Home
-const MainLayout = () => {
-  return (
-    <div className='flex flex-col min-h-screen'>
-      <Navbar />
-      <Outlet />
-      <Footer />
-    </div>
-  )
-}
 
 const ProfileLayout = () => {
   return (
@@ -88,21 +39,22 @@ const ProfileLayout = () => {
       <ProfilePage />
       <Footer />
     </div>
-  )
-}
+  );
+};
 
+// --- PROTECTIONS & HANDLERS ---
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   if (!isAuthenticated()) {
-    return <Navigate to='/login' replace />
+    return <Navigate to='/login' replace />;
   }
 
-  const decoded = getDecodedToken()
+  const decoded = getDecodedToken();
   if (allowedRoles.length && decoded && !allowedRoles.includes(decoded.role)) {
-    return <Navigate to='/' replace />
+    return <Navigate to='/' replace />;
   }
 
-  return children
-}
+  return children;
+};
 
 const NotFound = () => (
   <div className='min-h-screen flex items-center justify-center'>
@@ -112,72 +64,47 @@ const NotFound = () => (
       <a href='/' className='text-blue-600 underline'>Kembali ke beranda</a>
     </div>
   </div>
-)
+);
 
-// Router
+// --- ROUTER CONFIGURATION ---
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <MainLayout />,
+    path: "/",
+    element: <MainLayout />, 
+    errorElement: <NotFound />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-      {
-        path: 'catalog',
-        element: <CatalogPage />,
-      },
-      {
-        path: 'book/:vehicleId',
-        element: (
-          <ProtectedRoute>
-            <BookingPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'history',
-        element: (
-          <ProtectedRoute>
-            <HistoryPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: 'admin',
-        element: (
-          <ProtectedRoute allowedRoles={['admin']}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        ),
-      },
-    ],
+      { path: "/", element: <Home /> },
+      { path: "/catalog", element: <CatalogPage /> },
+      { path: "/history", element: <HistoryPage /> },
+      { path: "/book/:vehicleId", element: <BookingPage /> },
+    ]
   },
   {
-    path: '/profile',
+    path: "/profile",
     element: (
       <ProtectedRoute>
         <ProfileLayout />
       </ProtectedRoute>
-    ),
+    )
   },
   {
-    path: '/login',
-    element: <Login />,
+    path: "/admin",
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminDashboard />
+      </ProtectedRoute>
+    )
   },
   {
-    path: '/register',
-    element: <Register />,
-  },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
-])
+    path: "/register",
+    element: <Register />
+  }
+  // Catatan: Pastikan kamu sudah membuat halaman Login dan mendaftarkannya juga di sini
+]);
 
+// --- ROOT APP ---
 function App() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

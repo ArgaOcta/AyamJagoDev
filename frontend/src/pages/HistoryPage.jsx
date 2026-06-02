@@ -1,35 +1,15 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-=======
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL, getAuthHeaders, isAuthenticated } from '../utils/api';
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
 const HistoryPage = () => {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-<<<<<<< HEAD
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/history', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}` 
-          }
-        }); 
-        
-        if (!response.ok) throw new Error("Gagal mengambil data");
-        
-        const data = await response.json();
-        setHistory(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Gagal memuat riwayat:", error);
-=======
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Verifikasi apakah user sudah login
     if (!isAuthenticated()) {
       navigate('/login');
       return;
@@ -41,23 +21,20 @@ const HistoryPage = () => {
           headers: getAuthHeaders(),
         });
 
+        // Pastikan data yang di-set adalah array
         setHistory(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
         console.error('Gagal memuat riwayat:', error);
         if (error.response?.status === 401) {
           navigate('/login');
         }
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
       } finally {
         setIsLoading(false);
       }
     };
+    
     fetchData();
-<<<<<<< HEAD
-  }, []);
-=======
   }, [navigate]);
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
   const getStatusStyle = (status) => {
     const styles = {
@@ -75,7 +52,7 @@ const HistoryPage = () => {
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h2 style={{ color: '#333' }}>Riwayat Penyewaan Saya</h2>
-      <p>Daftar kendaraan yang pernah Anda sewa di AyamJago.dev[cite: 25, 26].</p>
+      <p>Daftar kendaraan yang pernah Anda sewa di AyamJago.dev.</p>
       
       {history.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center', border: '1px solid #ddd' }}>
@@ -85,19 +62,11 @@ const HistoryPage = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
           <thead>
             <tr style={{ backgroundColor: '#2c3e50', color: 'white' }}>
-<<<<<<< HEAD
-              <th style={{ padding: '12px' }}>Kendaraan [cite: 28]</th>
-              <th style={{ padding: '12px' }}>Mulai Sewa [cite: 29]</th>
-              <th style={{ padding: '12px' }}>Selesai Sewa [cite: 30]</th>
-              <th style={{ padding: '12px' }}>Total Harga [cite: 109]</th>
-              <th style={{ padding: '12px' }}>Status [cite: 31]</th>
-=======
               <th style={{ padding: '12px' }}>Kendaraan</th>
               <th style={{ padding: '12px' }}>Mulai Sewa</th>
               <th style={{ padding: '12px' }}>Selesai Sewa</th>
               <th style={{ padding: '12px' }}>Total Harga</th>
               <th style={{ padding: '12px' }}>Status</th>
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
             </tr>
           </thead>
           <tbody>

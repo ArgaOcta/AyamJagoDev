@@ -1,16 +1,6 @@
-<<<<<<< HEAD
 import React from "react";
 
-import Footer from "../components/Footer/Footer";
-import Navbar from "../components/Navbar/Navbar";
-
-function Home() {
-  return (
-    <div className="w-full">
-      
-    </div>
-=======
-import React from 'react';
+// Hapus import Navbar dan Footer karena sudah ada di MainLayout
 import Hero from '../components/Hero/Hero';
 import BookingBar from '../components/BookingBar/BookingBar';
 import Features from '../components/Features/Features';
@@ -26,7 +16,6 @@ function Home() {
       <VehicleCatalog />
       <Testimonials />
     </>
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
   );
 }
 

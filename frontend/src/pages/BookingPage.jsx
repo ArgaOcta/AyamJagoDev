@@ -1,24 +1,13 @@
-<<<<<<< HEAD
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-=======
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL, getAuthHeaders, isAuthenticated } from '../utils/api';
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
 function BookingPage() {
     const { vehicleId } = useParams();
     const navigate = useNavigate();
 
-<<<<<<< HEAD
-    const [formData, setFormData] = useState({
-        start_date: '',
-        end_date: '',
-        payment_method: 'Transfer Bank'
-=======
+    // Pastikan user sudah login sebelum bisa booking
     useEffect(() => {
         if (!isAuthenticated()) {
             navigate('/login');
@@ -29,8 +18,8 @@ function BookingPage() {
         start_date: '',
         end_date: '',
         payment_method: 'transfer'
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
     });
+    
     const [message, setMessage] = useState('');
 
     const handleChange = (e) => {
@@ -42,15 +31,7 @@ function BookingPage() {
         setMessage('Memproses pesanan...');
 
         try {
-<<<<<<< HEAD
-            const response = await axios.post('http://localhost:5000/api/bookings', {
-                user_id: 1,
-                vehicle_id: vehicleId,
-                start_date: formData.start_date,
-                end_date: formData.end_date,
-                payment_method: formData.payment_method
-            });
-=======
+            // Menggunakan fungsi standar yang memakai header otorisasi
             const response = await axios.post(
                 `${API_BASE_URL}/api/bookings`,
                 {
@@ -61,16 +42,17 @@ function BookingPage() {
                 },
                 { headers: getAuthHeaders() }
             );
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
-            setMessage(response.data.message);
+            setMessage(response.data.message || 'Booking berhasil dibuat!');
+            
+            // Arahkan kembali ke halaman utama setelah 3 detik
             setTimeout(() => {
                 navigate('/'); 
             }, 3000);
 
         } catch (error) {
             if (error.response) {
-                setMessage(error.response.data.message);
+                setMessage(error.response.data.message || 'Gagal memproses pesanan.');
             } else {
                 setMessage("Terjadi kesalahan jaringan.");
             }
@@ -82,36 +64,36 @@ function BookingPage() {
             <h2>Form Sewa Kendaraan</h2>
             <p>ID Kendaraan yang dipilih: {vehicleId}</p>
 
-            {message && <div style={{ padding: '10px', marginBottom: '15px', backgroundColor: '#f0f8ff', border: '1px solid #007BFF' }}>{message}</div>}
+            {message && (
+                <div style={{ padding: '10px', marginBottom: '15px', backgroundColor: '#f0f8ff', border: '1px solid #007BFF', borderRadius: '4px' }}>
+                    {message}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                 <div>
                     <label>Tanggal Sewa:</label><br />
-                    <input type="date" name="start_date" onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+                    <input type="date" name="start_date" onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
                 </div>
+                
                 <div>
                     <label>Tanggal Kembali:</label><br />
-                    <input type="date" name="end_date" onChange={handleChange} required style={{ width: '100%', padding: '8px' }} />
+                    <input type="date" name="end_date" onChange={handleChange} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
                 </div>
+                
                 <div>
                     <label>Metode Pembayaran:</label><br />
-                    <select name="payment_method" onChange={handleChange} style={{ width: '100%', padding: '8px' }}>
-<<<<<<< HEAD
-                        <option value="Transfer Bank">Transfer Bank</option>
-                        <option value="Cash on Delivery">Cash on Delivery (COD)</option>
-                        <option value="E-Wallet">E-Wallet</option>
-=======
+                    <select name="payment_method" value={formData.payment_method} onChange={handleChange} style={{ width: '100%', padding: '8px', marginTop: '5px' }}>
                         <option value="transfer">Transfer Bank</option>
                         <option value="cash">Cash on Delivery (COD)</option>
-                        <option value="qris">E-Wallet</option>
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
+                        <option value="qris">E-Wallet (QRIS)</option>
                     </select>
                 </div>
                 
-                <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#28a745', color: 'white', border: 'none', cursor: 'pointer' }}>
+                <button type="submit" style={{ padding: '10px 15px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
                     Konfirmasi Booking
                 </button>
-                <button type="button" onClick={() => navigate('/')} style={{ padding: '10px 15px', backgroundColor: '#dc3545', color: 'white', border: 'none', cursor: 'pointer' }}>
+                <button type="button" onClick={() => navigate('/')} style={{ padding: '10px 15px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
                     Batal
                 </button>
             </form>

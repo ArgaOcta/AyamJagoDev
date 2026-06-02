@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-=======
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -19,75 +14,11 @@ import {
   deleteLocalUser,
   createLocalToken,
 } from '../utils/api';
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
 function ProfilePage() {
+    // --- STATE MANAGEMENT ---
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-<<<<<<< HEAD
-    const userId = 1;
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        axios.get(`http://localhost:5000/api/users/${userId}`)
-            .then(res => {
-                setUserData(res.data.data);
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setLoading(false);
-            });
-    }, []);
-
-    if (loading) return <p>Memuat profil...</p>;
-
-    if (!userData) return <p>Gagal memuat data profil. Pastikan backend berjalan dan API tersedia.</p>;
-
-    return (
-        <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto', fontFamily: 'sans-serif' }}>
-            <button onClick={() => navigate('/')} style={{ marginBottom: '20px' }}>← Kembali ke Katalog</button>
-            
-            <section style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
-                <h2>Informasi Akun</h2>
-                <p><strong>Nama Lengkap:</strong> {userData.profile.full_name}</p>
-                <p><strong>Email:</strong> {userData.profile.email}</p>
-                <p><strong>Role:</strong> {userData.profile.role}</p>
-                <p><strong>Member Sejak:</strong> {new Date(userData.profile.created_at).toLocaleDateString('id-ID')}</p>
-            </section>
-
-            <section>
-                <h2>Riwayat Penyewaan</h2>
-                <table border="1" cellPadding="10" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                    <thead style={{ backgroundColor: '#eee' }}>
-                        <tr>
-                            <th>Kendaraan</th>
-                            <th>Tanggal Sewa</th>
-                            <th>Total Harga</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userData.history.map(book => (
-                            <tr key={book.id}>
-                                <td>{book.brand} {book.model}</td>
-                                <td>{new Date(book.start_date).toLocaleDateString()} - {new Date(book.end_date).toLocaleDateString()}</td>
-                                <td>Rp {Number(book.total_price).toLocaleString()}</td>
-                                <td>
-                                    <span style={{ 
-                                        padding: '4px 8px', 
-                                        borderRadius: '4px', 
-                                        backgroundColor: book.booking_status === 'completed' ? '#d4edda' : '#fff3cd' 
-                                    }}>
-                                        {book.booking_status}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </section>
-=======
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [editForm, setEditForm] = useState({ full_name: '', email: '' });
@@ -97,11 +28,13 @@ function ProfilePage() {
     const [deletingAccount, setDeletingAccount] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
+    
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const decodedToken = getDecodedToken();
     const userId = decodedToken?.id;
 
+    // --- FETCH PROFILE DATA ---
     useEffect(() => {
         if (!userId) {
             navigate('/login');
@@ -133,6 +66,7 @@ function ProfilePage() {
             });
     }, [userId, navigate]);
 
+    // --- HANDLERS ---
     const handleLogout = () => {
         clearToken();
         navigate('/login');
@@ -140,9 +74,7 @@ function ProfilePage() {
 
     const handleDeleteAccount = async () => {
         const confirmDelete = window.confirm('Yakin ingin menghapus akun Anda? Semua data akan hilang permanen.');
-        if (!confirmDelete) {
-            return;
-        }
+        if (!confirmDelete) return;
 
         setDeletingAccount(true);
         setSuccessMessage('');
@@ -235,7 +167,6 @@ function ProfilePage() {
                 return;
             }
 
-            // Fallback to local storage
             const decoded = getDecodedToken();
             const localResult = updateLocalUserAvatar({
                 id: decoded?.id,
@@ -247,9 +178,7 @@ function ProfilePage() {
                 setUserData((prev) => ({ ...prev, profile: localResult.user }));
                 setAvatarPreview(null);
                 setSuccessMessage('Avatar lokal berhasil diperbarui.');
-                if (fileInputRef.current) {
-                    fileInputRef.current.value = '';
-                }
+                if (fileInputRef.current) fileInputRef.current.value = '';
             } else {
                 setError(localResult.message);
             }
@@ -351,10 +280,9 @@ function ProfilePage() {
         }
     };
 
+    // --- CONDITIONAL RENDERING ---
     if (loading) return <p style={{ padding: '2rem', textAlign: 'center' }}>Memuat profil...</p>;
-
     if (error) return <p style={{ padding: '2rem', textAlign: 'center', color: '#ef4444' }}>{error}</p>;
-
     if (!userData) return <p style={{ padding: '2rem', textAlign: 'center' }}>Gagal memuat data profil. Pastikan backend berjalan dan API tersedia.</p>;
 
     const initials = userData.profile.full_name
@@ -370,9 +298,12 @@ function ProfilePage() {
     const lastBooking = history[0];
     const latestBookingDate = lastBooking ? new Date(lastBooking.start_date).toLocaleDateString('id-ID') : '-';
 
+    // --- MAIN RENDER ---
     return (
         <div className='profile-wrapper'>
             <div className='profile-container'>
+                
+                {/* Hero Section */}
                 <section className='profile-hero'>
                     <div className='profile-hero-card'>
                         <div className='profile-hero-left'>
@@ -427,7 +358,10 @@ function ProfilePage() {
                     </div>
                 </section>
 
+                {/* Main Grid */}
                 <section className='profile-main-grid'>
+                    
+                    {/* Kolom Kiri: Profil & Avatar & Password */}
                     <div className='profile-main-column'>
                         <div className='profile-card profile-summary-card'>
                             <div className='profile-card-header'>
@@ -590,6 +524,7 @@ function ProfilePage() {
                         )}
                     </div>
 
+                    {/* Kolom Kanan: Ringkasan & Bantuan */}
                     <aside className='profile-side'>
                         <div className='profile-card profile-side-card'>
                             <h3>Ringkasan Terakhir</h3>
@@ -624,6 +559,7 @@ function ProfilePage() {
                     </aside>
                 </section>
 
+                {/* Tabel Riwayat */}
                 <div className='profile-card profile-history-card'>
                     <h2>Riwayat Penyewaan</h2>
                     {history.length > 0 ? (
@@ -656,6 +592,7 @@ function ProfilePage() {
                     )}
                 </div>
 
+                {/* Action Bawah */}
                 <div className='profile-logout-section'>
                     <button className='btn btn-outline profile-logout-btn' onClick={handleLogout}>
                         Logout
@@ -665,13 +602,8 @@ function ProfilePage() {
                     </button>
                 </div>
             </div>
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
         </div>
     );
 }
 
-<<<<<<< HEAD
 export default ProfilePage;
-=======
-export default ProfilePage;
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
