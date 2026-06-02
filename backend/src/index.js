@@ -49,7 +49,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
-<<<<<<< HEAD
 
 app.get('/', (req, res) => {
     res.json({
@@ -61,7 +60,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-=======
 app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
 
@@ -76,4 +74,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
->>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
