@@ -26,7 +26,11 @@ const getVehicleById = async (req, res) => {
     }
 };
 
-const createVehicle = async (req, res) => {
+module.exports = { 
+    getVehicleById, 
+    getAllVehicles 
+};
+    const createVehicle = async (req, res) => {
     const { brand, model, license_plate, category, price_per_day, status, image_url, description } = req.body;
 
     if (!brand || !model || !license_plate || !category || !price_per_day || !status) {

@@ -5,8 +5,13 @@ const authMiddleware = require('../middlewares/authMiddleware');
 const authorize = require('../middlewares/authorize');
 
 router.get('/', vehicleController.getAllVehicles);
+<<<<<<< HEAD
+
+router.get('/:id', vehicleController.getVehicleById);
+=======
 router.post('/', authMiddleware, authorize(['admin']), vehicleController.createVehicle);
 router.get('/:id', vehicleController.getVehicleById);
 router.delete('/:id', authMiddleware, authorize(['admin']), vehicleController.deleteVehicle);
+>>>>>>> 9d2cde26a09c20cffd4c85152109282c30340ecd
 
 module.exports = router;

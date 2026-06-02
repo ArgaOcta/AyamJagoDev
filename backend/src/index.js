@@ -1,3 +1,5 @@
+const express = require('express');
+const cors = require('cors');
 ﻿const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -8,6 +10,11 @@ require('./config/database');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+app.use(cors()); 
+app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+
 
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 
@@ -25,6 +32,9 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes'); 
+const paymentRoutes = require('./routes/paymentRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
@@ -39,6 +49,17 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
+
+app.get('/', (req, res) => {
+    res.json({
+        message: "Backend Aplikasi Rental Kendaraan Berhasil Dijalankan!",
+        status: "Success"
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
 app.use('/api/admin', adminRoutes);
 app.use(errorHandler);
 

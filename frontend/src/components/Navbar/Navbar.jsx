@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { clearToken, getDecodedToken, isAuthenticated } from '../../utils/api';
@@ -74,9 +74,15 @@ export function Navbar() {
           </ul>
 
           <div className={styles.authButtons}>
-            <button type="button" className="btn btn-outline" onClick={toggleTheme} title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}>
+            <button 
+              type="button" 
+              className="btn btn-outline" 
+              onClick={toggleTheme} 
+              title={theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+            >
               {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
+            
             {user ? (
               <>
                 <span className={styles.userLabel}>
@@ -112,5 +118,3 @@ export function Navbar() {
     </header>
   );
 }
-
-export default Navbar;

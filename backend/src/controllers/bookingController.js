@@ -1,5 +1,31 @@
 const bookingModel = require('../models/bookingModel');
 
+const processBooking = async (req, res) => {
+    const { user_id, vehicle_id, start_date, end_date, payment_method } = req.body;
+
+    const validMethods = ['cash', 'transfer', 'qris'];
+
+    if (!payment_method) {
+        return res.status(400).json({
+            success: false,
+            message: "Metode pembayaran wajib diisi!"
+        });
+    }
+
+    if (!validMethods.includes(payment_method)) {
+        return res.status(400).json({
+            success: false,
+            message: "Metode pembayaran tidak valid"
+        });
+    }
+    if (!user_id || !vehicle_id || !start_date || !end_date || !payment_method) {
+        return res.status(400).json({
+            success: false,
+            message: "Validasi Gagal: Semua data (user_id, vehicle_id, start_date, end_date, payment_method) wajib diisi!"
+        });
+    }
+}
+
 const normalizePaymentMethod = (method) => {
     const mapping = {
         'Transfer Bank': 'transfer',
@@ -62,9 +88,6 @@ const processBooking = async (req, res) => {
         });
     }
 
-    // ==========================================
-    // 2. ERROR HANDLING & TRY-CATCH
-    // ==========================================
     try {
         const vehicle = await bookingModel.getVehiclePriceQuery(vehicle_id);
         
@@ -72,7 +95,6 @@ const processBooking = async (req, res) => {
             return res.status(404).json({ success: false, message: "Kendaraan tidak ditemukan" });
         }
 
-        // BUG FIX SPRINT SEBELUMNYA: Tolak pesanan jika kendaraan tidak tersedia
         if (vehicle[0].status !== 'tersedia') {
             return res.status(400).json({ 
                 success: false, 
@@ -85,8 +107,13 @@ const processBooking = async (req, res) => {
         const totalPrice = totalDays * pricePerDay;
 
         const newBookingId = await bookingModel.createBookingQuery(
-            userId, vehicle_id, start_date, end_date, totalDays, totalPrice
+            user_id, vehicle_id, start_date, end_date, totalDays, totalPrice
         );
+
+        await bookingModel.createPaymentQuery(newBookingId, payment_method, totalPrice);
+
+            userId, vehicle_id, start_date, end_date, totalDays, totalPrice
+        
 
         await bookingModel.createPaymentQuery(newBookingId, normalizedMethod, totalPrice);
 
