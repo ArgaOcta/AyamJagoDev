@@ -1,7 +1,6 @@
 const multer = require("multer");
 const path = require("path");
 
-// storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -12,7 +11,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// filter file (hanya gambar)
 const fileFilter = (req, file, cb) => {
   const allowed = /jpg|jpeg|png/;
   const ext = allowed.test(path.extname(file.originalname).toLowerCase());
