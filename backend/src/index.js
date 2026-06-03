@@ -1,7 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-﻿const express = require('express');
-const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
@@ -33,9 +31,6 @@ const vehicleRoutes = require('./routes/vehicleRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const userRoutes = require('./routes/userRoutes');
 const authRoutes = require('./routes/authRoutes'); 
-const paymentRoutes = require('./routes/paymentRoutes');
-const uploadRoutes = require('./routes/uploadRoutes');
-const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const adminRoutes = require('./routes/adminRoutes');
