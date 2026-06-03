@@ -2,18 +2,17 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 
-// --- IMPORTS KOMPONEN (Gunakan kurung kurawal jika menggunakan export function biasa) ---
 import { Navbar } from './components/Navbar/Navbar'; 
-import Footer from './components/Footer/Footer'; // Pastikan Footer menggunakan 'export default Footer'
+import Footer from './components/Footer/Footer';
 
-// --- IMPORTS PAGES ---
 import Home from './pages/Home';
-import Register from './pages/Register';
+import Register from './pages/Auth/Register';
+import Login from './pages/Auth/Login';
 import ProfilePage from './pages/ProfilePage';
 import CatalogPage from './pages/CatalogPage';
 import BookingPage from './pages/BookingPage';
 import HistoryPage from './pages/HistoryPage';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/Admin/Dashboard/Dashboard';
 
 import { getDecodedToken, isAuthenticated } from './utils/api';
 
@@ -76,6 +75,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/catalog", element: <CatalogPage /> },
       { path: "/history", element: <HistoryPage /> },
+      { path: "/admin", element: <AdminDashboard /> },
       { path: "/book/:vehicleId", element: <BookingPage /> },
     ]
   },
@@ -98,8 +98,11 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />
+  },
+  {
+    path: "/login",
+    element: <Login />
   }
-  // Catatan: Pastikan kamu sudah membuat halaman Login dan mendaftarkannya juga di sini
 ]);
 
 // --- ROOT APP ---
