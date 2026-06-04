@@ -87,7 +87,7 @@ export function VehicleCatalog() {
                   </div>
                 </div>
                 
-                <button className="btn btn-outline btn-block">Booking</button>
+                
                 <button
                   className="btn btn-outline btn-block"
                   onClick={() => navigate(`/book/${vehicle.id}`)}
