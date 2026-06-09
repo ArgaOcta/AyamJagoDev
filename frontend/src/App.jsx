@@ -5,6 +5,9 @@ import './App.css';
 import { Navbar } from './components/Navbar/Navbar'; 
 import Footer from './components/Footer/Footer';
 
+import { PublicLayout } from './layouts/PublicLayout';
+import AdminLayout from './layouts/AdminLayout';
+
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
@@ -12,36 +15,16 @@ import ProfilePage from './pages/ProfilePage';
 import CatalogPage from './pages/CatalogPage';
 import BookingPage from './pages/BookingPage';
 import HistoryPage from './pages/HistoryPage';
+
 import AdminDashboard from './pages/Admin/Dashboard/Dashboard';
+import Bookings from './pages/Admin/Bookings/Bookings';
+import Vehicles from './pages/Admin/Vehicles/Vehicles';
+import Users from './pages/Admin/Users/Users';
+import Payments from './pages/Admin/Payments/Payments';
+import Settings from './pages/Admin/Settings/Settings';
 
 import { getDecodedToken, isAuthenticated } from './utils/api';
 
-// --- LAYOUTS ---
-const MainLayout = () => {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar /> 
-      
-      <main style={{ flex: 1 }}>
-        <Outlet />
-      </main>
-
-      <Footer /> 
-    </div>
-  );
-};
-
-const ProfileLayout = () => {
-  return (
-    <div className='flex flex-col min-h-screen'>
-      <Navbar />
-      <ProfilePage />
-      <Footer />
-    </div>
-  );
-};
-
-// --- PROTECTIONS & HANDLERS ---
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   if (!isAuthenticated()) {
     return <Navigate to='/login' replace />;
@@ -65,36 +48,52 @@ const NotFound = () => (
   </div>
 );
 
-// --- ROUTER CONFIGURATION ---
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />, 
+    element: <PublicLayout />, 
     errorElement: <NotFound />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/catalog", element: <CatalogPage /> },
-      { path: "/history", element: <HistoryPage /> },
-      { path: "/admin", element: <AdminDashboard /> },
-      { path: "/book/:vehicleId", element: <BookingPage /> },
+      { index: true, element: <Home /> },
+      { path: "catalog", element: <CatalogPage /> },
+      { path: "book/:vehicleId", element: <BookingPage /> },
+      { 
+        path: "history", 
+        element: (
+          <ProtectedRoute>
+            <HistoryPage />
+          </ProtectedRoute>
+        ) 
+      },
+      { 
+        path: "profile", 
+        element: (
+          <ProtectedRoute>
+            <ProfilePage /> 
+          </ProtectedRoute>
+        ) 
+      }
     ]
   },
-  {
-    path: "/profile",
-    element: (
-      <ProtectedRoute>
-        <ProfileLayout />
-      </ProtectedRoute>
-    )
-  },
+  
   {
     path: "/admin",
     element: (
       <ProtectedRoute allowedRoles={['admin']}>
-        <AdminDashboard />
+        <AdminLayout />
       </ProtectedRoute>
-    )
+    ),
+    errorElement: <NotFound />,
+    children: [
+      { index: true, element: <AdminDashboard /> },
+      { path: 'vehicles', element: <Vehicles /> },
+      { path: 'bookings', element: <Bookings /> },
+      { path: 'payments', element: <Payments /> },
+      { path: 'users', element: <Users /> },
+      { path: 'settings', element: <Settings /> },
+    ]
   },
+
   {
     path: "/register",
     element: <Register />
@@ -105,7 +104,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-// --- ROOT APP ---
 function App() {
   return <RouterProvider router={router} />;
 }
