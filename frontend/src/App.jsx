@@ -2,7 +2,7 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 
-import { Navbar } from './components/Navbar/Navbar'; 
+import { Navbar } from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 
 import { PublicLayout } from './layouts/PublicLayout';
@@ -18,6 +18,7 @@ import HistoryPage from './pages/HistoryPage';
 
 import AdminDashboard from './pages/Admin/Dashboard/Dashboard';
 import Bookings from './pages/Admin/Bookings/Bookings';
+import CreateBooking from './pages/Admin/Bookings/CreateBooking';
 import Vehicles from './pages/Admin/Vehicles/Vehicles';
 import Users from './pages/Admin/Users/Users';
 import Payments from './pages/Admin/Payments/Payments';
@@ -25,6 +26,28 @@ import Settings from './pages/Admin/Settings/Settings';
 
 import { getDecodedToken, isAuthenticated } from './utils/api';
 
+// --- LAYOUTS ---
+const PublicLayout = () => {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+const AdminLayout = () => {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Outlet />
+    </div>
+  );
+};
+
+// --- PROTECTIONS & HANDLERS ---
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   if (!isAuthenticated()) {
     return <Navigate to='/login' replace />;
@@ -57,6 +80,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "catalog", element: <CatalogPage /> },
       { path: "book/:vehicleId", element: <BookingPage /> },
+      {
+        path: "history",
       { 
         path: "history", 
         element: (
