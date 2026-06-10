@@ -2,7 +2,7 @@ import React from 'react';
 import { CarFront } from 'lucide-react';
 import styles from '../Shared/AdminPage.module.css';
 
-export default function Vehicles() {
+export function Vehicles() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.header}>
@@ -12,7 +12,6 @@ export default function Vehicles() {
         </div>
         <button className="btn btn-solid">Add Vehicle</button>
       </div>
-
       <div className={styles.content}>
         <div className={styles.iconWrapper}>
           <CarFront size={32} />
@@ -23,3 +22,5 @@ export default function Vehicles() {
     </div>
   );
 }
+
+export default Vehicles;

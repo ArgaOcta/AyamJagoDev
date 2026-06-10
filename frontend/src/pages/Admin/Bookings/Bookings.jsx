@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Trash2, RefreshCw, CalendarCheck } from 'lucide-react';
 import { API_BASE_URL } from '../../../utils/api';
@@ -9,7 +8,6 @@ export function Bookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -78,31 +76,18 @@ export function Bookings() {
     <div className={styles.pageContainer}>
       {/* HEADER SECTION - Sesuai dengan template-mu */}
       <div className={styles.header}>
-  <div>
-    <h1 className={styles.title}>Bookings</h1>
-    <p className={styles.subtitle}>
-      Kelola reservasi dan jadwal pelanggan.
-    </p>
-  </div>
-
-  <div style={{ display: 'flex', gap: '10px' }}>
-    <button
-      className="btn btn-solid"
-      onClick={() => navigate('/admin/bookings/create')}
-    >
-      + Create Booking
-    </button>
-
-    <button
-      className="btn btn-solid"
-      onClick={fetchBookings}
-      style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-    >
-      <RefreshCw size={18} />
-      Segarkan Data
-    </button>
-  </div>
-</div>
+        <div>
+          <h1 className={styles.title}>Bookings</h1>
+          <p className={styles.subtitle}>Kelola reservasi dan jadwal pelanggan.</p>
+        </div>
+        <button 
+          className="btn btn-solid" 
+          onClick={fetchBookings}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
+          <RefreshCw size={18} /> Segarkan Data
+        </button>
+      </div>
 
       {/* CONTENT SECTION - Menampilkan Error / Loading / Tabel */}
       <div className={styles.content}>

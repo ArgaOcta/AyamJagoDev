@@ -5,6 +5,9 @@ import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 
+import { PublicLayout } from './layouts/PublicLayout';
+import AdminLayout from './layouts/AdminLayout';
+
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
@@ -68,11 +71,10 @@ const NotFound = () => (
   </div>
 );
 
-// --- ROUTER CONFIGURATION ---
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PublicLayout />,
+    element: <PublicLayout />, 
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
@@ -80,22 +82,25 @@ const router = createBrowserRouter([
       { path: "book/:vehicleId", element: <BookingPage /> },
       {
         path: "history",
+      { 
+        path: "history", 
         element: (
           <ProtectedRoute>
             <HistoryPage />
           </ProtectedRoute>
-        )
+        ) 
       },
-      {
-        path: "profile",
+      { 
+        path: "profile", 
         element: (
           <ProtectedRoute>
-            <ProfilePage />
+            <ProfilePage /> 
           </ProtectedRoute>
-        )
+        ) 
       }
     ]
   },
+  
   {
     path: "/admin",
     element: (
@@ -108,12 +113,12 @@ const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: 'vehicles', element: <Vehicles /> },
       { path: 'bookings', element: <Bookings /> },
-      { path: 'bookings/create', element: <CreateBooking /> },
       { path: 'payments', element: <Payments /> },
       { path: 'users', element: <Users /> },
       { path: 'settings', element: <Settings /> },
     ]
   },
+
   {
     path: "/register",
     element: <Register />
@@ -124,7 +129,6 @@ const router = createBrowserRouter([
   }
 ]);
 
-// --- ROOT APP ---
 function App() {
   return <RouterProvider router={router} />;
 }
