@@ -1,0 +1,66 @@
+.bookingBarWrapper {
+  position: relative;
+  z-index: 20;
+  margin-top: -60px;
+  padding: 0 1.5rem;
+}
+
+.bookingBar {
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  padding: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.formLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.formInput, .formSelect {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  background-color: var(--white);
+  transition: var(--transition);
+}
+
+.formInput:focus, .formSelect:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .bookingBar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .bookingBarWrapper {
+    margin-top: -30px;
+  }
+  
+  .bookingBar {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+}

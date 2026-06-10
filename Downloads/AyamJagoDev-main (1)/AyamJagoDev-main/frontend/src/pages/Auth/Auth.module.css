@@ -1,0 +1,169 @@
+.authContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 1.5rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(17, 24, 39, 0.75);
+  backdrop-filter: blur(6px);
+}
+
+.authCard {
+  position: relative;
+  z-index: 10;
+  background: var(--white);
+  padding: 3rem 2.5rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: var(--shadow-lg);
+}
+
+.logo {
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+  display: block;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-gray);
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  color: var(--text-dark);
+  transition: var(--transition);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-gray);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+}
+
+.passwordToggle:hover {
+  color: var(--text-dark);
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-gray);
+  cursor: pointer;
+}
+
+.forgotLink {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgotLink:hover {
+  text-decoration: underline;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 0.875rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--text-gray);
+}
+
+.footerLink {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .authCard {
+    padding: 2rem 1.5rem;
+  }
+}
