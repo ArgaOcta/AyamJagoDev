@@ -122,7 +122,7 @@ const deleteUserAccount = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const userId = req.user.id;
-  const { avatar_data } = req.body;
+  const avatar_data = req.body.avatar_data || req.body.avatar_url || req.body.avatar;
 
   if (!avatar_data) {
     return res.status(400).json({ success: false, message: 'Data avatar tidak disediakan.' });

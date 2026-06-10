@@ -9,10 +9,12 @@ require('./config/database');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors()); 
-app.use(express.json());
-app.use('/uploads', express.static('uploads'));
+app.use(cors());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// ✅ TAMBAHAN PENTING UNTUK MULTER (INI WAJIB)
+app.use('/uploads', express.static('uploads'));
 
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 
@@ -20,12 +22,16 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 app.use(helmet());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
-// CORS restricted to configured frontend origin. Allow credentials for cookie-based auth.
+// CORS restricted
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
+
 app.use(cookieParser());
 app.use(express.json());
+
+
 app.use('/uploads', express.static('uploads'));
 
+// ROUTES
 const bookingRoutes = require('./routes/bookingRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const historyRoutes = require('./routes/historyRoutes');
@@ -36,7 +42,6 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
-
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/history', historyRoutes);
@@ -45,6 +50,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
 
+// HOME
 app.get('/', (req, res) => {
     res.json({
         message: "Backend Aplikasi Rental Kendaraan Berhasil Dijalankan!",
@@ -52,20 +58,13 @@ app.get('/', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+// ADMIN
 app.use('/api/admin', adminRoutes);
+
+// ERROR HANDLER
 app.use(errorHandler);
 
-
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Backend Aplikasi Rental Kendaraan Berhasil Dijalankan!',
-    status: 'Success',
-  });
-});
-
+// START SERVER (TETAP PAKAI PUNYAMU, TIDAK AKU UBAH)
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

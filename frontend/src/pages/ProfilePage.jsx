@@ -28,6 +28,7 @@ function ProfilePage() {
     const [deletingAccount, setDeletingAccount] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(null);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
     
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
@@ -50,20 +51,12 @@ function ProfilePage() {
                 });
                 setLoading(false);
             })
-            .catch(err => {
-                console.warn('Backend profile gagal, gunakan profil lokal jika ada.', err.message || err);
-                const localProfile = getLocalProfile();
-                if (localProfile) {
-                    setUserData(localProfile);
-                    setEditForm({
-                        full_name: localProfile.profile.full_name,
-                        email: localProfile.profile.email,
-                    });
-                } else {
-                    setError('Gagal memuat data profil. Silakan login ulang.');
-                }
-                setLoading(false);
-            });
+          .catch(err => {
+    console.warn('Backend profile gagal:', err.message || err);
+
+    setError('Gagal memuat data profil dari server.');
+    setLoading(false);
+}); 
     }, [userId, navigate]);
 
     // --- HANDLERS ---
@@ -113,24 +106,25 @@ function ProfilePage() {
         setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
     };
 
-    const handleAvatarSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (!file.type.startsWith('image/')) {
-                setError('Hanya file gambar yang diperbolehkan.');
-                return;
-            }
-            if (file.size > 5 * 1024 * 1024) {
-                setError('Ukuran gambar tidak boleh lebih dari 5MB.');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setAvatarPreview(event.target.result);
-            };
-            reader.readAsDataURL(file);
+   const handleAvatarSelect = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+        if (!file.type.startsWith('image/')) {
+            setError('Hanya file gambar yang diperbolehkan.');
+            return;
         }
-    };
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Ukuran gambar tidak boleh lebih dari 5MB.');
+            return;
+        }
+
+        // ✅ ini yang benar untuk multer
+        setAvatarPreview(URL.createObjectURL(file));
+        setSelectedFile(file);
+    }
+};
 
     const uploadAvatar = async () => {
         if (!avatarPreview) {
@@ -141,6 +135,9 @@ function ProfilePage() {
         setUploadingAvatar(true);
         setError('');
         setSuccessMessage('');
+
+        const formData = new FormData();
+        formData.append('avatar', selectedFile);
 
         try {
             const response = await axios.put(
