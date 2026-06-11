@@ -1,76 +1,99 @@
 const db = require('../config/database');
 
 const getAllVehicles = async (req, res) => {
-    try {
-        const [rows] = await db.query('SELECT * FROM vehicles');
-        res.status(200).json({ success: true, data: rows });
-    } catch (error) {
-        console.error("Error mengambil data kendaraan:", error);
-        res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
-    }
+  try {
+    const [vehicles] = await db.query('SELECT * FROM vehicles ORDER BY id DESC');
+    res.status(200).json({ success: true, data: vehicles });
+  } catch (error) {
+    console.error('Error getAllVehicles:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal mengambil data kendaraan' });
+  }
 };
 
 const getVehicleById = async (req, res) => {
-    const vehicleId = req.params.id;
-    try {
-        const [rows] = await db.query('SELECT * FROM vehicles WHERE id = ?', [vehicleId]);
-        
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Kendaraan tidak ditemukan' });
-        }
-        
-        res.status(200).json(rows[0]); // Langsung kirim objek data mobilnya
-    } catch (error) {
-        console.error("Error getVehicleById:", error);
-        res.status(500).json({ message: 'Terjadi kesalahan pada server' });
+  const { id } = req.params;
+  try {
+    const [vehicle] = await db.query('SELECT * FROM vehicles WHERE id = ?', [id]);
+    if (vehicle.length === 0) {
+      return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
     }
+    res.status(200).json({ success: true, data: vehicle[0] });
+  } catch (error) {
+    console.error('Error getVehicleById:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal mengambil data detail kendaraan' });
+  }
 };
 
-module.exports = { 
-    getVehicleById, 
-    getAllVehicles 
+const createVehicle = async (req, res) => {
+  const { brand, model, category, year, price, status, image_url } = req.body;
+
+  if (!brand || !model || !price) {
+    return res.status(400).json({ success: false, message: 'Brand, model, dan harga wajib diisi!' });
+  }
+
+  try {
+    const [result] = await db.query(
+      'INSERT INTO vehicles (brand, model, category, year, price, status, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [brand, model, category || 'Mobil', year || null, price, status || 'available', image_url || null]
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Kendaraan berhasil ditambahkan',
+      data: { id: result.insertId, brand, model }
+    });
+  } catch (error) {
+    console.error('Error createVehicle:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal menambahkan kendaraan' });
+  }
 };
-    const createVehicle = async (req, res) => {
-    const { brand, model, license_plate, category, price_per_day, status, image_url, description } = req.body;
 
-    if (!brand || !model || !license_plate || !category || !price_per_day || !status) {
-        return res.status(400).json({ success: false, message: 'Semua field wajib diisi.' });
+const updateVehicle = async (req, res) => {
+  const { id } = req.params;
+  const { brand, model, category, year, price, status, image_url } = req.body;
+
+  try {
+    // Cek apakah data ada
+    const [existing] = await db.query('SELECT id FROM vehicles WHERE id = ?', [id]);
+    if (existing.length === 0) {
+      return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
     }
 
-    try {
-        const [result] = await db.query(
-            'INSERT INTO vehicles (brand, model, license_plate, category, price_per_day, status, image_url, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [brand, model, license_plate, category, price_per_day, status, image_url || '', description || '']
-        );
+    await db.query(
+      'UPDATE vehicles SET brand = ?, model = ?, category = ?, year = ?, price = ?, status = ?, image_url = ? WHERE id = ?',
+      [brand, model, category, year, price, status, image_url, id]
+    );
 
-        const [createdRows] = await db.query('SELECT * FROM vehicles WHERE id = ?', [result.insertId]);
-        res.status(201).json({ success: true, data: createdRows[0] });
-    } catch (error) {
-        console.error('Error createVehicle:', error);
-        res.status(500).json({ success: false, message: 'Gagal membuat kendaraan.' });
-    }
+    res.status(200).json({ success: true, message: 'Data kendaraan berhasil diperbarui' });
+  } catch (error) {
+    console.error('Error updateVehicle:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal memperbarui kendaraan' });
+  }
 };
 
 const deleteVehicle = async (req, res) => {
-    const vehicleId = req.params.id;
-
-    try {
-        const [rows] = await db.query('SELECT id FROM vehicles WHERE id = ?', [vehicleId]);
-        if (rows.length === 0) {
-            return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan.' });
-        }
-
-        await db.query('DELETE FROM vehicles WHERE id = ?', [vehicleId]);
-        res.status(200).json({ success: true, message: 'Kendaraan berhasil dihapus.' });
-    } catch (error) {
-        console.error('Error deleteVehicle:', error);
-        res.status(500).json({ success: false, message: 'Gagal menghapus kendaraan.' });
+  const { id } = req.params;
+  try {
+    const [result] = await db.query('DELETE FROM vehicles WHERE id = ?', [id]);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
     }
+
+    res.status(200).json({ success: true, message: 'Kendaraan berhasil dihapus' });
+  } catch (error) {
+    console.error('Error deleteVehicle:', error.message);
+    if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+        return res.status(400).json({ success: false, message: 'Gagal dihapus: Kendaraan ini memiliki riwayat pesanan.' });
+    }
+    res.status(500).json({ success: false, message: 'Gagal menghapus kendaraan' });
+  }
 };
 
-module.exports = { 
-    getVehicleById, 
-    getAllVehicles,
-    createVehicle,
-    deleteVehicle
+module.exports = {
+  getAllVehicles,
+  getVehicleById,
+  createVehicle,
+  updateVehicle,
+  deleteVehicle
 };

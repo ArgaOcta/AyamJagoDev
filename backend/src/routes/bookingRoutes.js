@@ -1,11 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
+const { 
+    processBooking, 
+    getAllBookings, 
+    updateBookingStatus, 
+    deleteBooking 
+} = require('../controllers/bookingController');
 
-router.post('/', bookingController.processBooking);
-const authMiddleware = require('../middlewares/authMiddleware');
-const authorize = require('../middlewares/authorize');
+// Route untuk User Frontend
+router.post('/', processBooking);
 
-router.post('/', authMiddleware, authorize(['admin', 'user']), bookingController.processBooking);
+// Route untuk Admin Dashboard
+router.get('/', getAllBookings);
+router.put('/:id/status', updateBookingStatus);
+router.delete('/:id', deleteBooking);
 
 module.exports = router;
