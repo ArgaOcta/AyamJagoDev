@@ -5,7 +5,8 @@ const getUserHistory = async (req, res) => {
 
     const query = `
         SELECT 
-            b.id, 
+            b.id,
+            b.vehicle_id, 
             v.brand, 
             v.model AS vehicle_name, 
             b.start_date, 
