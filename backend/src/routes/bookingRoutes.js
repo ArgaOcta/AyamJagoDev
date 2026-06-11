@@ -1,5 +1,13 @@
 const express = require('express');
 const router = express.Router();
+
+const bookingController = require('../controllers/bookingController');
+
+router.get('/', (req, res) => {
+    res.send('Booking API berjalan');
+});
+
+router.post('/', bookingController.processBooking);
 const { 
     processBooking, 
     getAllBookings, 
