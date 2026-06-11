@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 require('./config/database');
+const initDb = require('./config/initDb');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,9 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // ✅ TAMBAHAN PENTING UNTUK MULTER (INI WAJIB)
 app.use('/uploads', express.static('uploads'));
+
+// Run DB init/migrations
+initDb();
 
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
 

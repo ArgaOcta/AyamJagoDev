@@ -11,7 +11,7 @@ const login = async (req, res) => {
   }
 
   try {
-    const [rows] = await db.query('SELECT *, IFNULL(is_blocked,0) as is_blocked FROM users WHERE email = ?', [email]);
+    const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'User tidak ditemukan' });
@@ -19,11 +19,12 @@ const login = async (req, res) => {
 
     const user = rows[0];
     const isMatch = await bcrypt.compare(password, user.password_hash);
-    
+
     if (!isMatch) {
       return res.status(401).json({ message: 'Password salah' });
     }
 
+    // Cek apakah akun diblokir
     if (user.is_blocked) {
       return res.status(403).json({ message: 'Akun Anda diblokir. Hubungi administrator.' });
     }

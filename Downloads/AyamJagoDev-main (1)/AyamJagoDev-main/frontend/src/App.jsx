@@ -5,8 +5,8 @@ import './App.css';
 import { Navbar } from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 
-import { PublicLayout } from './layouts/PublicLayout';
-import AdminLayout from './layouts/AdminLayout';
+import { PublicLayout } from './Layouts/PublicLayout';
+import AdminLayout from './Layouts/AdminLayout';
 
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
@@ -27,7 +27,7 @@ import Settings from './pages/Admin/Settings/Settings';
 import { getDecodedToken, isAuthenticated } from './utils/api';
 
 // --- LAYOUTS ---
-// Using `PublicLayout` and `AdminLayout` imported from ./layouts
+// using layout components from src/Layouts
 
 // --- PROTECTIONS & HANDLERS ---
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -62,8 +62,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "catalog", element: <CatalogPage /> },
       { path: "book/:vehicleId", element: <BookingPage /> },
-      { 
-        path: "history", 
+      {
+        path: "history",
         element: (
           <ProtectedRoute>
             <HistoryPage />
