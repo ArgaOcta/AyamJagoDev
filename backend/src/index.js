@@ -7,7 +7,7 @@ require('dotenv').config();
 require('./config/database');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -43,6 +43,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
 app.use('/api/bookings', bookingRoutes);
+
+console.log('Booking route loaded');
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/users', userRoutes);
