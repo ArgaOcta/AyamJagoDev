@@ -53,7 +53,7 @@ const NotFound = () => (
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PublicLayout />, 
+    element: <PublicLayout />,
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },

@@ -26,6 +26,17 @@ db.getConnection()
             console.error('Test Query Gagal:', queryError.message);
         }
 
+        try {
+            await connection.query('ALTER TABLE users ADD COLUMN is_blocked TINYINT(1) DEFAULT 0');
+            console.log('Kolom is_blocked ditambahkan ke tabel users.');
+        } catch (alterError) {
+            if (alterError.message && alterError.message.includes('Duplicate column name')) {
+                // Kolom sudah ada, tidak perlu tindakan lebih lanjut
+            } else {
+                console.error('Gagal menambahkan kolom is_blocked:', alterError.message);
+            }
+        }
+
         connection.release();
     })
     .catch((err) => {

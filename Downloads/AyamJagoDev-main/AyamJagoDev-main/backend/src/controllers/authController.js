@@ -24,6 +24,10 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Password salah' });
     }
 
+    if (user.is_blocked) {
+      return res.status(403).json({ message: 'Akun Anda diblokir. Hubungi admin.' });
+    }
+
     // Pembuatan Token
     const token = jwt.sign(
       {
@@ -31,6 +35,7 @@ const login = async (req, res) => {
         full_name: user.full_name,
         email: user.email,
         role: user.role,
+        is_blocked: Boolean(user.is_blocked),
         created_at: user.created_at,
       },
       process.env.JWT_SECRET,
