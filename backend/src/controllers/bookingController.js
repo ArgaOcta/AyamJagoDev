@@ -1,8 +1,5 @@
 const db = require('../config/database');
 
-// ==========================================
-// HELPER FUNCTION
-// ==========================================
 const normalizePaymentMethod = (method) => {
     const mapping = {
         'Transfer Bank': 'transfer',
@@ -17,19 +14,21 @@ const normalizePaymentMethod = (method) => {
     return mapping[method] || method;
 };
 
-// ==========================================
-// FUNGSI UNTUK USER (FRONTEND PUBLIK)
-// ==========================================
-
 const processBooking = async (req, res) => {
     try {
-        const { user_id, vehicle_id, start_date, end_date, payment_method } = req.body;
+        const user_id = req.user?.id || req.body.user_id;
 
-        if (!user_id || !vehicle_id || !start_date || !end_date || !payment_method) {
-            return res.status(400).json({ success: false, message: "Validasi Gagal: Semua data wajib diisi!" });
+        const { 
+            vehicle_id, start_date, end_date, payment_method,
+            pickup_time, pickup_location, notes, with_driver 
+        } = req.body;
+
+        if (!user_id || !vehicle_id || !start_date || !end_date) {
+            return res.status(400).json({ success: false, message: "Validasi Gagal: Data utama (kendaraan, tanggal) wajib diisi!" });
         }
 
-        const normalizedMethod = normalizePaymentMethod(payment_method);
+        const methodToUse = payment_method || 'transfer';
+        const normalizedMethod = normalizePaymentMethod(methodToUse);
         const validMethods = ['cash', 'transfer', 'qris'];
 
         if (!validMethods.includes(normalizedMethod)) {
@@ -41,20 +40,29 @@ const processBooking = async (req, res) => {
         const diffTime = Math.abs(endDateObj - startDateObj);
         const total_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1; 
 
-        let pricePerDay = 500000; 
+        let pricePerDay = 0; 
         try {
-            const [vehicleRows] = await db.query('SELECT price FROM vehicles WHERE id = ?', [vehicle_id]);
-            if (vehicleRows.length > 0 && vehicleRows[0].price) {
-                pricePerDay = vehicleRows[0].price;
+            const [vehicleRows] = await db.query('SELECT price_per_day FROM vehicles WHERE id = ?', [vehicle_id]);
+            if (vehicleRows.length > 0) {
+                pricePerDay = vehicleRows[0].price_per_day; 
             }
-        } catch (err) {}
+        } catch (err) {
+            console.error("Gagal mengambil harga database:", err);
+        }
         
-        const total_price = total_days * pricePerDay;
+        const driverFee = with_driver ? (250000 * total_days) : 0;
+        const total_price = (total_days * pricePerDay) + driverFee;
 
         const [bookingResult] = await db.query(
-            `INSERT INTO bookings (user_id, vehicle_id, start_date, end_date, total_days, total_price, booking_status) 
-             VALUES (?, ?, ?, ?, ?, ?, 'pending')`,
-            [user_id, vehicle_id, start_date, end_date, total_days, total_price]
+            `INSERT INTO bookings (
+                user_id, vehicle_id, start_date, end_date, total_days, total_price, 
+                booking_status, pickup_time, pickup_location, notes, with_driver
+            ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)`,
+            [
+                user_id, vehicle_id, start_date, end_date, total_days, total_price,
+                pickup_time || null, pickup_location || null, notes || null, 
+                with_driver ? 1 : 0 
+            ]
         );
 
         const newBookingId = bookingResult.insertId;
@@ -80,7 +88,6 @@ const processBooking = async (req, res) => {
 const cancelBooking = async (req, res) => {
     try {
         const { id } = req.params;
-        // Ambil dari req.user.id jika pakai middleware token, atau req.body
         const userId = req.user?.id || req.body.user_id; 
 
         if (!userId) {
@@ -115,7 +122,7 @@ const updateBooking = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Data tidak lengkap' });
         }
 
-        const [vehicle] = await db.query('SELECT price FROM vehicles WHERE id = ?', [vehicle_id]);
+        const [vehicle] = await db.query('SELECT price_per_day, price FROM vehicles WHERE id = ?', [vehicle_id]);
 
         if (vehicle.length === 0) {
             return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
@@ -129,7 +136,8 @@ const updateBooking = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Tanggal tidak valid' });
         }
 
-        const totalPrice = totalDays * (vehicle[0].price || 500000);
+        const vehiclePrice = vehicle[0].price_per_day || vehicle[0].price || 500000;
+        const totalPrice = totalDays * vehiclePrice;
 
         const [result] = await db.query(
             'UPDATE bookings SET vehicle_id = ?, start_date = ?, end_date = ?, total_days = ?, total_price = ? WHERE id = ?',
@@ -140,7 +148,6 @@ const updateBooking = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Booking tidak ditemukan atau sudah diproses' });
         }
 
-        // Opsional: Update jumlah tagihan di tabel pembayaran terkait (payments)
         await db.query('UPDATE payments SET amount = ? WHERE booking_id = ?', [totalPrice, id]);
 
         return res.status(200).json({ success: true, message: 'Booking berhasil diperbarui' });
@@ -168,17 +175,12 @@ const getBookingById = async (req, res) => {
     }
 };
 
-
-// ==========================================
-// FUNGSI UNTUK ADMIN (DASHBOARD)
-// ==========================================
-
-// [READ] Ambil semua pesanan dengan detail lengkap (JOIN)
 const getAllBookings = async (req, res) => {
     try {
         const query = `
             SELECT 
                 b.id, b.start_date, b.end_date, b.total_days, b.total_price, b.booking_status, b.created_at,
+                b.pickup_time, b.pickup_location, b.notes, b.with_driver,
                 u.full_name AS user_name, u.email AS user_email,
                 v.brand AS vehicle_brand, v.model AS vehicle_model,
                 p.payment_method, p.payment_status
@@ -196,7 +198,6 @@ const getAllBookings = async (req, res) => {
     }
 };
 
-// [UPDATE] Ubah status pesanan (misal: pending -> active -> completed)
 const updateBookingStatus = async (req, res) => {
     const { id } = req.params;
     const { booking_status, payment_status } = req.body;
@@ -222,7 +223,6 @@ const updateBookingStatus = async (req, res) => {
     }
 };
 
-// [DELETE] Hapus pesanan (Beserta data pembayarannya)
 const deleteBooking = async (req, res) => {
     const { id } = req.params;
     
@@ -242,9 +242,6 @@ const deleteBooking = async (req, res) => {
     }
 };
 
-// ==========================================
-// EXPORTS 
-// ==========================================
 module.exports = { 
     processBooking,
     cancelBooking,

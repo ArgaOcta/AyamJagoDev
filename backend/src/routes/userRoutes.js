@@ -7,9 +7,6 @@ const authorize = require('../middlewares/authorize');
 const multer = require('multer');
 const path = require('path');
 
-// ==========================
-// MULTER CONFIG
-// ==========================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
@@ -20,10 +17,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-// ==========================
-// ROUTES
-// ==========================
 
 router.get(
   '/profile',
@@ -39,7 +32,6 @@ router.put(
   userController.updateUserProfile
 );
 
-// 🔥 FIX AVATAR (PAKAI MULTER)
 router.put(
   '/avatar',
   authMiddleware,

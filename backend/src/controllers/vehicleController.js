@@ -25,23 +25,35 @@ const getVehicleById = async (req, res) => {
 };
 
 const createVehicle = async (req, res) => {
-  const { brand, model, category, year, price, status, image_url } = req.body;
+  const { 
+    brand, model, license_plate, category, price_per_day, 
+    status, description, transmission, seat_capacity, 
+    fuel_type, luggage_capacity, features 
+  } = req.body;
 
-  if (!brand || !model || !price) {
-    return res.status(400).json({ success: false, message: 'Brand, model, dan harga wajib diisi!' });
+  if (!brand || !model || !license_plate || !price_per_day) {
+    return res.status(400).json({ success: false, message: 'Brand, model, plat nomor, dan harga wajib diisi!' });
   }
 
   try {
+    const image_url = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : null;
+
     const [result] = await db.query(
-      'INSERT INTO vehicles (brand, model, category, year, price, status, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [brand, model, category || 'Mobil', year || null, price, status || 'available', image_url || null]
+      `INSERT INTO vehicles (
+        brand, model, license_plate, category, price_per_day, 
+        status, image_url, description, transmission, seat_capacity, 
+        fuel_type, luggage_capacity, features
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        brand, model, license_plate, category || 'mobil', price_per_day, 
+        status || 'tersedia', image_url, description || null, 
+        transmission || 'manual', seat_capacity || 5, 
+        fuel_type || 'bensin', luggage_capacity || 2, 
+        features || null
+      ]
     );
 
-    res.status(201).json({
-      success: true,
-      message: 'Kendaraan berhasil ditambahkan',
-      data: { id: result.insertId, brand, model }
-    });
+    res.status(201).json({ success: true, message: 'Kendaraan berhasil ditambahkan dengan spesifikasi lengkap!' });
   } catch (error) {
     console.error('Error createVehicle:', error.message);
     res.status(500).json({ success: false, message: 'Gagal menambahkan kendaraan' });
@@ -50,21 +62,32 @@ const createVehicle = async (req, res) => {
 
 const updateVehicle = async (req, res) => {
   const { id } = req.params;
-  const { brand, model, category, year, price, status, image_url } = req.body;
+  const { 
+    brand, model, license_plate, category, price_per_day, 
+    status, description, existing_image, transmission, 
+    seat_capacity, fuel_type, luggage_capacity, features 
+  } = req.body;
 
   try {
-    // Cek apakah data ada
     const [existing] = await db.query('SELECT id FROM vehicles WHERE id = ?', [id]);
-    if (existing.length === 0) {
-      return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
-    }
+    if (existing.length === 0) return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
+
+    const image_url = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : existing_image;
 
     await db.query(
-      'UPDATE vehicles SET brand = ?, model = ?, category = ?, year = ?, price = ?, status = ?, image_url = ? WHERE id = ?',
-      [brand, model, category, year, price, status, image_url, id]
+      `UPDATE vehicles SET 
+        brand = ?, model = ?, license_plate = ?, category = ?, price_per_day = ?, 
+        status = ?, image_url = ?, description = ?, transmission = ?, 
+        seat_capacity = ?, fuel_type = ?, luggage_capacity = ?, features = ? 
+      WHERE id = ?`,
+      [
+        brand, model, license_plate, category, price_per_day, 
+        status, image_url, description, transmission, 
+        seat_capacity, fuel_type, luggage_capacity, features, id
+      ]
     );
 
-    res.status(200).json({ success: true, message: 'Data kendaraan berhasil diperbarui' });
+    res.status(200).json({ success: true, message: 'Data dan spesifikasi kendaraan berhasil diperbarui!' });
   } catch (error) {
     console.error('Error updateVehicle:', error.message);
     res.status(500).json({ success: false, message: 'Gagal memperbarui kendaraan' });

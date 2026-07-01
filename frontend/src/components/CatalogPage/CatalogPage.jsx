@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Tambahkan navigasi
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Armchair, Briefcase, CarFront, Fuel, Gauge, ShieldCheck, Sparkles, Tag, Zap } from 'lucide-react';
-import { API_BASE_URL } from '../utils/api'; 
+import { API_BASE_URL } from '../../utils/api'; 
 
-import styles from '../components/CatalogPage/CatalogPage.module.css';
+import styles from './CatalogPage.module.css';
 
 const formatPrice = (price) => new Intl.NumberFormat('id-ID', {
   style: 'currency',
@@ -27,7 +27,7 @@ const fuelIcon = {
 function CatalogPage() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // 3. Deklarasikan fungsi navigasi
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/api/vehicles`)
@@ -50,7 +50,7 @@ function CatalogPage() {
         <div className={styles.sectionHeader}>
           <span className={styles.eyebrow}>Eksplorasi Armada</span>
           <h2 className={styles.sectionTitle}>Katalog Kendaraan</h2>
-          <p className={styles.sectionSubtitle}>Temukan kendaraan impian untuk perjalananmu bersama AyamJago.dev. Pilih armada yang paling sesuai dengan kebutuhan spesifikasimu.</p>
+          <p className={styles.sectionSubtitle}>Temukan kendaraan impian untuk perjalananmu bersama Kami. Pilih armada yang paling sesuai dengan kebutuhan spesifikasimu.</p>
         </div>
 
         {loading ? (
@@ -146,7 +146,6 @@ function CatalogPage() {
                       <ShieldCheck size={22} className={styles.verifiedIcon} color="#2563eb" />
                     </div>
 
-                    {/* 4. PERUBAHAN UTAMA: Tombol sekarang mengarahkan user ke halaman Booking membawa ID mobil */}
                     <button 
                       className={`btn btn-block ${currentStatus === 'tersedia' ? 'btn-solid' : 'btn-outline'}`} 
                       disabled={currentStatus !== 'tersedia'}
