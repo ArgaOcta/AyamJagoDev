@@ -23,7 +23,6 @@ router.get('/', getAllBookings);
 router.put('/:id/status', updateBookingStatus);
 router.delete('/:id', deleteBooking);
 
-const bookingController = require('../controllers/bookingController');
 const authMiddleware = require('../middlewares/authMiddleware');
 const authorize = require('../middlewares/authorize');
 
@@ -47,6 +46,4 @@ router.put(
     bookingController.updateBooking
 );
 
-//ini semisal gak jalan untuk backup router aja
-//bookingController.getBookingById (ini dpakai semisal router post baris 8-12 tidak berfungsi)
 module.exports = router;

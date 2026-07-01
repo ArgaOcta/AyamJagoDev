@@ -122,15 +122,15 @@ const deleteUserAccount = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const userId = req.user.id;
-  const avatar_data = req.body.avatar_data || req.body.avatar_url || req.body.avatar;
 
-  if (!avatar_data) {
-    return res.status(400).json({ success: false, message: 'Data avatar tidak disediakan.' });
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'Tidak ada file gambar yang diunggah.' });
   }
 
   try {
-    // Store the base64 encoded image data directly
-    await db.query('UPDATE users SET avatar_url = ? WHERE id = ?', [avatar_data, userId]);
+    const avatar_url = `http://localhost:5001/uploads/${req.file.filename}`;
+
+    await db.query('UPDATE users SET avatar_url = ? WHERE id = ?', [avatar_url, userId]);
 
     const [user] = await db.query('SELECT id, full_name, email, role, avatar_url, created_at FROM users WHERE id = ?', [userId]);
     const updatedUser = user[0];

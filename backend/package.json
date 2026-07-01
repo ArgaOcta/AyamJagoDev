@@ -4,8 +4,8 @@
   "description": "Kelompok AyamJago.dev kami adalah kelompok pembuatan project web pada mata kuliah pemrograman fullstack dimana misi kami menyelesaikan project yang telah kami rancang.",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
