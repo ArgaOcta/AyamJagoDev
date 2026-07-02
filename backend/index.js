@@ -37,6 +37,7 @@ const paymentRoutes = require('./src/routes/paymentRoutes');
 const uploadRoutes = require('./src/routes/uploadRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const errorHandler = require('./src/middlewares/errorHandler');
+const dashboardRoutes = require('./src/routes/dashboardRoutes');
 
 // --- USE ROUTES ---
 app.use('/api/bookings', bookingRoutes);
@@ -47,6 +48,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // --- ROOT ENDPOINT ---
 app.get('/', (req, res) => {
