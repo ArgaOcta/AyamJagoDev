@@ -1,8 +1,10 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import './App.css';
 
-// Pastikan import ini mengarah ke file layout yang benar di foldermu
+import { Navbar } from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
+
 import { PublicLayout } from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
 
@@ -11,7 +13,7 @@ import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
 import ProfilePage from './pages/ProfilePage';
 import CatalogPage from './pages/CatalogPage';
-import BookingPage from './pages/Booking/BookingPage';
+import BookingPage from './pages/BookingPage';
 import HistoryPage from './pages/HistoryPage';
 
 import AdminDashboard from './pages/Admin/Dashboard/Dashboard';
@@ -23,6 +25,7 @@ import Payments from './pages/Admin/Payments/Payments';
 import Settings from './pages/Admin/Settings/Settings';
 
 import { getDecodedToken, isAuthenticated } from './utils/api';
+
 
 // --- PROTECTIONS & HANDLERS ---
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
@@ -48,35 +51,36 @@ const NotFound = () => (
   </div>
 );
 
-// --- ROUTER CONFIGURATION ---
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PublicLayout />, 
     errorElement: <NotFound />,
     children: [
-      { index: true, element: <Home /> },
-      { path: "catalog", element: <CatalogPage /> },
-      { path: "book/:id", element: <BookingPage /> },
-      { path: "book", element: <BookingPage /> },
-      {
-        path: "history",
-        element: (  
-          <ProtectedRoute>
-            <HistoryPage />
-          </ProtectedRoute>
-        )
-      },
-      { 
-        path: "profile", 
-        element: (
-          <ProtectedRoute>
-            <ProfilePage /> 
-          </ProtectedRoute>
-        ) 
-      }
-    ]
+  { index: true, element: <Home /> },
+  { path: "catalog", element: <CatalogPage /> },
+  { path: "book/:vehicleId", element: <BookingPage /> },
+
+  {
+    path: "history",
+    element: (
+      <ProtectedRoute>
+        <HistoryPage />
+      </ProtectedRoute>
+    )
   },
+
+  {
+    path: "profile",
+    element: (
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    )
+  }
+]
+  },
+  
   {
     path: "/admin",
     element: (
@@ -94,6 +98,7 @@ const router = createBrowserRouter([
       { path: 'settings', element: <Settings /> },
     ]
   },
+
   {
     path: "/register",
     element: <Register />

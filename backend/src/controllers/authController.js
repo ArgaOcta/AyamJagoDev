@@ -18,6 +18,11 @@ const login = async (req, res) => {
     }
 
     const user = rows[0];
+
+    if (user.is_blocked === 1 || user.is_blocked === true) {
+      return res.status(403).json({ message: 'Akun Anda diblokir oleh admin.' });
+    }
+
     const isMatch = await bcrypt.compare(password, user.password_hash);
     
     if (!isMatch) {

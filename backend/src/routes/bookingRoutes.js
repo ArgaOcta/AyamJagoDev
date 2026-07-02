@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 
@@ -46,4 +47,6 @@ router.put(
     bookingController.updateBooking
 );
 
+//ini semisal gak jalan untuk backup router aja
+//bookingController.getBookingById (ini dpakai semisal router post baris 8-12 tidak berfungsi)
 module.exports = router;
