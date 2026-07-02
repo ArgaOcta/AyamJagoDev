@@ -1,0 +1,139 @@
+/* Payment.module.css */
+.paymentContainer {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.summaryBox {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #e5e7eb;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.summaryRow strong {
+  color: #111827;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 2px dashed #d1d5db;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.instructionBox {
+  background-color: #eff6ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #bfdbfe;
+}
+
+.instructionBox h4 {
+  color: #1e3a8a;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instructionBox p {
+  color: #1e40af;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btnPay {
+  width: 100%;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btnPay:hover {
+  background-color: #1d4ed8;
+}
+
+.btnPay:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+/* Tambahan untuk Tampilan VA dan QRIS */
+.vaBox {
+  background: #ffffff;
+  border: 2px dashed #2563eb;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #1e3a8a;
+}
+
+.qrBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.qrBox img {
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}

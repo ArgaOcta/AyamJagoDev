@@ -1,0 +1,109 @@
+/* Vehicles.module.css */
+
+.pageContainer {
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btnPrimary, .btnSecondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btnPrimary { background: #2563eb; color: white; }
+.btnPrimary:hover { background: #1d4ed8; }
+
+.btnSecondary { background: #e5e7eb; color: #374151; }
+.btnSecondary:hover { background: #d1d5db; }
+
+/* Table Card Styling */
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table thead { background: #f3f4f6; }
+
+.table th {
+  padding: 1rem;
+  color: #4b5563;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.9rem;
+}
+
+/* Badge Status Styling */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.tersedia { background: #dcfce7; color: #166534; }
+.disewa { background: #fef3c7; color: #92400e; }
+.maintenance { background: #fee2e2; color: #991b1b; }
+
+/* Action Buttons */
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btnEdit { color: #d97706; }
+.btnEdit:hover { background: #fffbeb; }
+
+.btnDelete { color: #dc2626; }
+.btnDelete:hover { background: #fef2f2; }

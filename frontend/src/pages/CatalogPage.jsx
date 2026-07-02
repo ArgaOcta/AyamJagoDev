@@ -113,7 +113,11 @@ function CatalogPage() {
                     <div className={styles.specGrid}>
                       <div className={styles.spec}>
                         <Armchair size={16} />
-                        <span>{vehicle.seat_capacity || 5} kursi</span>
+                        <span>
+                          {vehicle.category === "motor"
+                            ? `${vehicle.seat_capacity} Orang`
+                            : `${vehicle.seat_capacity} Kursi`}
+                        </span>
                       </div>
                       <div className={styles.spec}>
                         <Gauge size={16} />
@@ -123,10 +127,12 @@ function CatalogPage() {
                         {fuelIcon[fuelType] || <Fuel size={16} />}
                         <span style={{ textTransform: 'capitalize' }}>{fuelType}</span>
                       </div>
-                      <div className={styles.spec}>
-                        <Briefcase size={16} />
-                        <span>{vehicle.luggage_capacity || 2} bagasi</span>
-                      </div>
+                      {vehicle.category === "mobil" && (
+                        <div className={styles.spec}>
+                          <Briefcase size={16} />
+                          <span>{vehicle.luggage_capacity} Bagasi</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className={styles.featuresRow}>
@@ -146,7 +152,6 @@ function CatalogPage() {
                       <ShieldCheck size={22} className={styles.verifiedIcon} color="#2563eb" />
                     </div>
 
-                    {/* 4. PERUBAHAN UTAMA: Tombol sekarang mengarahkan user ke halaman Booking membawa ID mobil */}
                     <button 
                       className={`btn btn-block ${currentStatus === 'tersedia' ? 'btn-solid' : 'btn-outline'}`} 
                       disabled={currentStatus !== 'tersedia'}

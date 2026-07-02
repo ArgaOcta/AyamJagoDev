@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Trash2, Edit, Plus, X, RefreshCw, CarFront } from 'lucide-react';
 import { API_BASE_URL } from '../../../utils/api';
-import styles from '../Shared/AdminPage.module.css';
+import styles from '../Vehicles/Vehicles.module.css';
 
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState([]);

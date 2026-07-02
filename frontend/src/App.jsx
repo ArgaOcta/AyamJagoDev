@@ -13,6 +13,7 @@ import ProfilePage from './pages/ProfilePage';
 import CatalogPage from './pages/CatalogPage';
 import BookingPage from './pages/Booking/BookingPage';
 import HistoryPage from './pages/HistoryPage';
+import PaymentPage from './pages/Booking/PaymentPage';
 
 import AdminDashboard from './pages/Admin/Dashboard/Dashboard';
 import Bookings from './pages/Admin/Bookings/Bookings';
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
       { path: "catalog", element: <CatalogPage /> },
       { path: "book/:id", element: <BookingPage /> },
       { path: "book", element: <BookingPage /> },
+      { path: "payment", element: <PaymentPage /> },
       {
         path: "history",
         element: (  
