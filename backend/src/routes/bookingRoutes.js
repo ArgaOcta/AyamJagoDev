@@ -3,28 +3,12 @@ const router = express.Router();
 
 const bookingController = require('../controllers/bookingController');
 
-router.get('/', (req, res) => {
-    res.send('Booking API berjalan');
-});
-
-router.post('/', bookingController.processBooking);
-const { 
-    processBooking, 
-    getAllBookings, 
-    updateBookingStatus, 
-    deleteBooking 
-} = require('../controllers/bookingController');
-
-// Route untuk User Frontend
-router.post('/', processBooking);
-
-// Route untuk Admin Dashboard
-router.get('/', getAllBookings);
-router.put('/:id/status', updateBookingStatus);
-router.delete('/:id', deleteBooking);
-
 const authMiddleware = require('../middlewares/authMiddleware');
 const authorize = require('../middlewares/authorize');
+
+router.get('/test', (req, res) => {
+    res.send('Booking API berjalan dengan aman');
+});
 
 router.post(
     '/',
@@ -32,6 +16,7 @@ router.post(
     authorize(['admin', 'user']),
     bookingController.processBooking
 );
+
 router.patch(
     '/cancel/:id',
     authMiddleware,
@@ -44,6 +29,27 @@ router.put(
     authMiddleware,
     authorize(['admin', 'user']),
     bookingController.updateBooking
+);
+
+router.get(
+    '/admin',
+    authMiddleware,
+    authorize(['admin']),
+    bookingController.getAllBookings
+);
+
+router.put(
+    '/:id/status',
+    authMiddleware,
+    authorize(['admin']),
+    bookingController.updateBookingStatus
+);
+
+router.delete(
+    '/:id',
+    authMiddleware,
+    authorize(['admin']),
+    bookingController.deleteBooking
 );
 
 module.exports = router;

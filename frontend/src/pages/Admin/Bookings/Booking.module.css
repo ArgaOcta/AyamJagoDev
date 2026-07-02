@@ -1,0 +1,124 @@
+/* Bookings.module.css */
+
+.pageContainer {
+  padding: 1.5rem;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.tableContainer {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f9fafb;
+  color: #4b5563;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.table td {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #374151;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Bagian Identitas & Info */
+.primaryText {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.secondaryText {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.driverBadge {
+  font-size: 0.65rem;
+  background-color: #eff6ff;
+  color: #2563eb;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  border: 1px solid #dbeafe;
+  margin-left: 0.5rem;
+}
+
+/* Badge Status */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.badgePending { background-color: #fef3c7; color: #b45309; }
+.badgeActive { background-color: #d1fae5; color: #047857; }
+.badgeCompleted { background-color: #dbeafe; color: #1d4ed8; }
+.badgeCancelled { background-color: #fee2e2; color: #b91c1c; }
+
+/* Tombol Aksi */
+.actionGroup {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btnAction {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btnApprove { color: #16a34a; background-color: #f0fdf4; }
+.btnApprove:hover { background-color: #dcfce7; }
+
+.btnReject { color: #dc2626; background-color: #fef2f2; }
+.btnReject:hover { background-color: #fee2e2; }
+
+.btnDelete { color: #9ca3af; }
+.btnDelete:hover { color: #dc2626; background-color: #fef2f2; }

@@ -61,7 +61,7 @@ CREATE TABLE `vehicles` (
   `price_per_day` decimal(12,2) NOT NULL,
   `status` enum('tersedia','disewa','maintenance') DEFAULT 'tersedia',
   `image_url` varchar(255) DEFAULT NULL,
-  `description` text,
+  `description` text, 
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `transmission` enum('manual','automatic') DEFAULT 'manual',
   `seat_capacity` int DEFAULT '5',

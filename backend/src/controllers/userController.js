@@ -155,4 +155,52 @@ const updateAvatar = async (req, res) => {
   }
 };
 
-module.exports = { getUserProfile, updateUserProfile, changeUserPassword, deleteUserAccount, updateAvatar };
+// ==========================================
+// FUNGSI KHUSUS ADMIN
+// ==========================================
+
+const getAllUsers = async (req, res) => {
+  try {
+    // Menggunakan full_name sesuai struktur database kamu
+    const [users] = await db.query(
+      'SELECT id, full_name, email, role, created_at FROM users ORDER BY created_at DESC'
+    );
+    
+    res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    console.error('Error getAllUsers:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal mengambil data pengguna.' });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const userId = req.params.id; // Mengambil ID dari URL yang ditekan Admin
+
+  try {
+    // Keamanan Ekstra: Cegah Admin menghapus sesama Admin atau Super Admin
+    const [userCheck] = await db.query('SELECT role FROM users WHERE id = ?', [userId]);
+    if (userCheck.length > 0 && userCheck[0].role === 'admin') {
+      return res.status(403).json({ success: false, message: 'Akun Admin tidak boleh dihapus!' });
+    }
+
+    await db.query('DELETE FROM users WHERE id = ?', [userId]);
+    res.status(200).json({ success: true, message: 'Pengguna berhasil dihapus dari sistem.' });
+  } catch (error) {
+    console.error('Error deleteUser:', error.message);
+    res.status(500).json({ success: false, message: 'Gagal menghapus pengguna. Data mungkin masih terikat dengan transaksi booking.' });
+  }
+};
+
+// Pastikan mengekspor SEMUA fungsi agar bisa diakses oleh userRoutes.js
+module.exports = { 
+  getUserProfile, 
+  updateUserProfile, 
+  changeUserPassword, 
+  deleteUserAccount, 
+  updateAvatar,
+  getAllUsers,      // <-- Fungsi Baru
+  deleteUser        // <-- Fungsi Baru
+};

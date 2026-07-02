@@ -54,4 +54,18 @@ router.delete(
   userController.deleteUserAccount
 );
 
+router.get(
+  '/',
+  authMiddleware,
+  authorize(['admin']),
+  userController.getAllUsers
+);
+
+router.delete(
+  '/:id',
+  authMiddleware,
+  authorize(['admin']),
+  userController.deleteUser
+);
+
 module.exports = router;
