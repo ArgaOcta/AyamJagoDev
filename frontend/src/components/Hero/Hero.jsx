@@ -1,7 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Import useNavigate
 import styles from './Hero.module.css';
 
 export function Hero() {
+  const navigate = useNavigate(); // 2. Inisialisasi hook
+
+  const handleSewaClick = () => {
+    navigate('/catalog'); // 3. Arahkan ke rute katalog
+  };
+
   return (
     <section 
       className={styles.hero} 
@@ -14,7 +21,13 @@ export function Hero() {
           Temukan kendaraan pilihanmu dengan harga terbaik dan proses yang transparan. 
           Pilih, pesan, dan nikmati perjalananmu tanpa ribet.
         </p>
-        <button className={`btn btn-solid ${styles.heroCta}`}>Mulai Booking</button>
+        {/* 4. Tambahkan onClick untuk menjalankan fungsi navigasi */}
+        <button 
+          className={`btn btn-solid ${styles.heroCta}`} 
+          onClick={handleSewaClick}
+        >
+          Sewa Sekarang
+        </button>
       </div>
     </section>
   );

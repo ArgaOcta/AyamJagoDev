@@ -31,15 +31,23 @@ export function Login() {
       console.log("Respons Login API:", response.data);
 
       if (response.data.token) {
-        setToken(response.data.token);
+      setToken(response.data.token);
       }
 
-      const userRole = response.data.data?.user?.role || response.data.user?.role;
-      
-      if (userRole === 'admin') {
-        navigate('/admin');
+      // Ambil data user dari response
+      const user = response.data.data?.user || response.data.user;
+
+      // Simpan role dan data user ke localStorage
+      if (user) {
+          localStorage.setItem("role", user.role);
+          localStorage.setItem("name", user.name);
+          localStorage.setItem("email", user.email);
+      }
+
+      if (user?.role === "admin") {
+          navigate("/admin");
       } else {
-        navigate('/');
+          navigate("/");
       }
 
     } catch (err) {

@@ -23,6 +23,9 @@ const processBooking = async (req, res) => {
             pickup_time, pickup_location, notes, with_driver 
         } = req.body;
 
+        // Menangkap path file jika user mengunggah bukti (dari multer)
+        const proof_url = req.file ? `http://localhost:5001/uploads/payments/${req.file.filename}` : null;
+
         if (!user_id || !vehicle_id || !start_date || !end_date) {
             return res.status(400).json({ success: false, message: "Validasi Gagal: Data utama (kendaraan, tanggal) wajib diisi!" });
         }
@@ -50,7 +53,9 @@ const processBooking = async (req, res) => {
             console.error("Gagal mengambil harga database:", err);
         }
         
-        const driverFee = with_driver ? (250000 * total_days) : 0;
+        // FormData mengubah boolean menjadi string, jadi kita perlu mengecek nilai string-nya
+        const isWithDriver = with_driver === 'true' || with_driver === true || with_driver === '1' || with_driver === 1;
+        const driverFee = isWithDriver ? (250000 * total_days) : 0;
         const total_price = (total_days * pricePerDay) + driverFee;
 
         const [bookingResult] = await db.query(
@@ -61,22 +66,23 @@ const processBooking = async (req, res) => {
             [
                 user_id, vehicle_id, start_date, end_date, total_days, total_price,
                 pickup_time || null, pickup_location || null, notes || null, 
-                with_driver ? 1 : 0 
+                isWithDriver ? 1 : 0 
             ]
         );
 
         const newBookingId = bookingResult.insertId;
 
+        // Modifikasi query insert payments untuk memasukkan proof_url
         await db.query(
-            `INSERT INTO payments (booking_id, payment_method, amount, payment_status) 
-             VALUES (?, ?, ?, 'pending')`,
-            [newBookingId, normalizedMethod, total_price]
+            `INSERT INTO payments (booking_id, payment_method, amount, payment_status, proof_url) 
+             VALUES (?, ?, ?, 'pending', ?)`,
+            [newBookingId, normalizedMethod, total_price, proof_url]
         );
 
         return res.status(201).json({
             success: true,
             message: "Pesanan berhasil dibuat!",
-            data: { booking_id: newBookingId, total_days, total_price }
+            data: { booking_id: newBookingId, total_days, total_price, proof_url }
         });
 
     } catch (error) {
@@ -122,7 +128,7 @@ const updateBooking = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Data tidak lengkap' });
         }
 
-        const [vehicle] = await db.query('SELECT price_per_day, price FROM vehicles WHERE id = ?', [vehicle_id]);
+        const [vehicle] = await db.query('SELECT price_per_day FROM vehicles WHERE id = ?', [vehicle_id]);
 
         if (vehicle.length === 0) {
             return res.status(404).json({ success: false, message: 'Kendaraan tidak ditemukan' });
@@ -183,7 +189,7 @@ const getAllBookings = async (req, res) => {
                 b.pickup_time, b.pickup_location, b.notes, b.with_driver,
                 u.full_name AS user_name, u.email AS user_email,
                 v.brand AS vehicle_brand, v.model AS vehicle_model,
-                p.payment_method, p.payment_status
+                p.payment_method, p.payment_status, p.proof_url
             FROM bookings b
             JOIN users u ON b.user_id = u.id
             JOIN vehicles v ON b.vehicle_id = v.id

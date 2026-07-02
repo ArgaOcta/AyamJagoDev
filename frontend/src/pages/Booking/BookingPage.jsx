@@ -61,7 +61,7 @@ export function BookingPage() {
     return (basePrice * duration) + (withDriver ? 250000 * duration : 0);
   }, [selectedVehicle, duration, withDriver]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!formData.start_date) {
@@ -69,53 +69,36 @@ export function BookingPage() {
       return;
     }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert("Anda harus login terlebih dahulu untuk melakukan booking!");
-        navigate('/login');
-        return;
-      }
-
-      let userIdFromToken = null;
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        userIdFromToken = payload.id || payload.userId || payload.user_id; 
-      } catch (err) {
-        console.error("Gagal membaca token:", err);
-      }
-
-      const startDateObj = new Date(formData.start_date);
-      const endDateObj = new Date(startDateObj);
-      endDateObj.setDate(endDateObj.getDate() + duration);
-      const calculatedEndDate = endDateObj.toISOString().split('T')[0];
-
-      const bookingData = {
-        user_id: userIdFromToken,
-        vehicle_id: parseInt(selectedVehicleId),
-        start_date: formData.start_date,
-        end_date: calculatedEndDate,
-        total_days: duration,
-        total_price: total,
-        pickup_time: formData.pickup_time,
-        pickup_location: formData.pickup_location,
-        notes: formData.notes,
-        with_driver: withDriver,
-        payment_method: formData.payment_method
-      };
-
-      console.log("Data yang akan dikirim:", bookingData);
-
-      const headers = { Authorization: `Bearer ${token}` };
-        
-      await axios.post(`${API_BASE_URL}/api/bookings`, bookingData, { headers });
-      
-      alert("Permintaan booking berhasil dikirim! Admin akan segera memproses.");
-      navigate('/history'); 
-    } catch (error) {
-      console.error("Booking error:", error);
-      alert(error.response?.data?.message || "Terjadi kesalahan saat memproses booking.");
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Anda harus login terlebih dahulu untuk melakukan booking!");
+      navigate('/login');
+      return;
     }
+
+    const startDateObj = new Date(formData.start_date);
+    const endDateObj = new Date(startDateObj);
+    endDateObj.setDate(endDateObj.getDate() + duration);
+    const calculatedEndDate = endDateObj.toISOString().split('T')[0];
+
+    const bookingData = {
+      vehicle_id: parseInt(selectedVehicleId),
+      start_date: formData.start_date,
+      end_date: calculatedEndDate,
+      total_days: duration,
+      total_price: total, // Hasil perhitungan useMemo
+      pickup_time: formData.pickup_time,
+      pickup_location: formData.pickup_location,
+      notes: formData.notes,
+      with_driver: withDriver,
+      payment_method: formData.payment_method,
+      
+      vehicle_name: `${selectedVehicle.brand} ${selectedVehicle.model}`
+    };
+
+    console.log("Data dioper ke halaman pembayaran:", bookingData);
+
+    navigate('/payment', { state: bookingData });
   };
 
   if (loading) return <div style={{ textAlign: 'center', padding: '100px' }}>Memuat data formulir...</div>;
@@ -232,7 +215,7 @@ export function BookingPage() {
               </select>
             </div>
 
-            <button type="submit" className="btn btn-solid btn-block">Kirim Permintaan Booking</button>
+            <button type="submit" className="btn btn-solid btn-block">Lanjutkan Pembayaran</button>
           </form>
 
           <aside className={styles.summaryCard}>

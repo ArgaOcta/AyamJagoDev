@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom'; // Tambahkan useNavigate
 import { 
   LayoutDashboard, 
   CarFront, 
@@ -12,6 +12,18 @@ import {
 import styles from './Sidebar.module.css';
 
 export function Sidebar() {
+  const navigate = useNavigate(); // Inisialisasi fungsi navigasi
+
+  // Fungsi untuk menangani proses logout
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Apakah Anda yakin ingin keluar?');
+    
+    if (confirmLogout) {
+      localStorage.removeItem('token');
+      navigate('/login');
+    }
+  };
+
   const menuItems = [
     { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/admin' },
     { icon: <CarFront size={20} />, label: 'Data Kendaraan', path: '/admin/vehicles' },
@@ -44,7 +56,8 @@ export function Sidebar() {
       </nav>
 
       <div className={styles.footer}>
-        <button className={styles.logoutBtn}>
+        {/* Tambahkan event onClick ke tombol */}
+        <button onClick={handleLogout} className={styles.logoutBtn}>
           <LogOut size={20} />
           <span>Keluar</span>
         </button>
